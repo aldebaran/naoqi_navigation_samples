@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html ng-app="pepper-patrol">
+<head>
+  <style>
+    body {
+      font-size: 24pt;
+    }
+
+    #wrapper canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #ui {
+      position:absolute;
+      top:50px;
+      right:50px;
+    }
+  </style>
+
+  <meta name="viewport" content="width=1280, user-scalable=no" />
+</head>
+<body ng-controller="map-display">
+  <div id="wrapper">
+    <canvas id="map_container" ></canvas>
+    <canvas id="waypoints" ng-click="addOnClick($event)"></canvas>
+  </div>
+  <div id="ui">
+    <button id="goto_button" ng-click="OnGoClick($event)">Patrol</button>
+    <button id="reset_button" ng-click="OnResetClick($event)">Reset</button>
+  </div>
+
+  <!-- <script src="js/jquery-1.11.0.min.js"></script>-->
+  <script src="js/robotutils.js"></script>
+  <script src="js/angular.min.js"></script>
+  <script src="js/angular-touch.min.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+
+
+</script>
+
+</body>
+</html>
