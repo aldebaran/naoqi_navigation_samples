@@ -27,8 +27,27 @@
     <canvas id="waypoints" ng-click="addOnClick($event)"></canvas>
   </div>
   <div id="ui">
-    <button id="goto_button" ng-click="OnGoClick($event)">Patrol</button>
-    <button id="reset_button" ng-click="OnResetClick($event)">Reset</button>
+    <div id="map_loading_screen">
+      <form name="form">
+        <p>
+<!-- une balise select ou input ne peut pas être imbriquée directement dans form -->
+          <select name="exploration_list">
+          </select>
+          <input type="submit" value="Load" ng-click="OnClickLoadExplo()"/>
+        </p>
+      </form>
+    </div>
+    <div id="map_reloc" display="none">
+      <button ng-click="OnMapDisplay($event)">Configure Patrol</button>
+      <button ng-click="OnRelocalizeMode($event)">Relocalize the robot</button>
+    </div>
+    <div id="patrol_screen" display="none">
+      <button ng-click="OnGoClick($event)">Patrol</button>
+      <button ng-click="OnResetClick($event)">Reset</button>
+    </div>
+    <div id="general">
+      <button ng-click="OnExit($event)">Exit</button>
+    </div>
   </div>
 
   <!-- <script src="js/jquery-1.11.0.min.js"></script>-->

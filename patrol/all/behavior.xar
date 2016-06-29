@@ -179,7 +179,12 @@ class MyClass(GeneratedClass):
         GeneratedClass.__init__(self)
 
     def onLoad(self):
-        self.navigation = ALProxy("ALNavigation")
+        self.navigation = self.session().service("ALNavigation")
+        self.life = self.session().service("ALAutonomousLife")
+        self.life.setSafeguardEnabled("RobotMoved", False)
+        self.life.setSafeguardEnabled("RobotPushed", False)
+        self.ba = self.session().service("ALBasicAwareness")
+        self.ba.stopAwareness()
         pass
 
     def onUnload(self):
@@ -188,12 +193,10 @@ class MyClass(GeneratedClass):
 
     def onInput_onStart(self):
         try:
-            self.logger.info("try to get metrical map")
-            self.navigation.getMetricalMap()
-            self.logger.info("SUCCESSFUL")
+            self.navigation.stopLocalization()
+            self.navigation.stopExploration()
             self.onMapLoaded()
         except:
-            self.logger.info("NO MAP")
             self.onMapNotLoaded()
         pass
 
@@ -433,9 +436,9 @@ class MyClass(GeneratedClass):
                         <Link inputowner="0" indexofinput="4" outputowner="6" indexofoutput="3" />
                         <Link inputowner="0" indexofinput="4" outputowner="5" indexofoutput="3" />
                         <Link inputowner="4" indexofinput="2" outputowner="7" indexofoutput="5" />
-                        <Link inputowner="7" indexofinput="2" outputowner="0" indexofoutput="2" />
-                        <Link inputowner="1" indexofinput="2" outputowner="7" indexofoutput="6" />
                         <Link inputowner="5" indexofinput="2" outputowner="1" indexofoutput="4" />
+                        <Link inputowner="7" indexofinput="2" outputowner="0" indexofoutput="2" />
+                        <Link inputowner="4" indexofinput="2" outputowner="7" indexofoutput="6" />
                     </Diagram>
                 </BehaviorKeyframe>
             </BehaviorLayer>

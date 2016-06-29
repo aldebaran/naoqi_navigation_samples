@@ -13,7 +13,10 @@
         <Input name="Patrol/AddWayPoint" type="0" type_size="1" nature="4" stm_value_name="Patrol/AddWayPoint" inner="1" tooltip="Patrol/AddWayPoint desc" id="4" />
         <Input name="Patrol/StartPatrol" type="0" type_size="1" nature="4" stm_value_name="Patrol/StartPatrol" inner="1" tooltip="Patrol/StartPatrol desc" id="5" />
         <Input name="Patrol/Reset" type="0" type_size="1" nature="4" stm_value_name="Patrol/Reset" inner="1" tooltip="Patrol/Reset desc" id="6" />
-        <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="7" />
+        <Input name="Patrol/LoadExploration" type="0" type_size="1" nature="4" stm_value_name="Patrol/LoadExploration" inner="1" tooltip="Patrol/LoadExploration desc" id="7" />
+        <Input name="Patrol/Relocalize" type="0" type_size="1" nature="4" stm_value_name="Patrol/Relocalize" inner="1" tooltip="Patrol/Relocalize desc" id="8" />
+        <Input name="Patrol/Exit" type="0" type_size="1" nature="4" stm_value_name="Patrol/Exit" inner="1" tooltip="Patrol/Exit desc" id="9" />
+        <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="10" />
         <Timeline enable="0">
             <BehaviorLayer name="behavior_layer1">
                 <BehaviorKeyframe name="keyframe1" index="1">
@@ -73,7 +76,7 @@ class MyClass(GeneratedClass):
                             <Output name="onSuccess" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished successfully." id="3" />
                             <Output name="onFailure" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished unsuccessfully." id="4" />
                         </Box>
-                        <Box name="Get map" id="1" localization="8" tooltip="" x="615" y="10">
+                        <Box name="Patrol panel" id="1" localization="8" tooltip="" x="832" y="285">
                             <bitmap>media/images/box/box-python-script.png</bitmap>
                             <script language="4">
                                 <content>
@@ -148,7 +151,7 @@ class MyClass(GeneratedClass):
         self.session.connect("tcp://127.0.0.1:9559")
         self.mem = self.session.service("ALMemory")
         self.nav = self.session.service("ALNavigation")
-        self.tts = self.session.service("ALTextToSpeech")
+        self.tts = self.session.service("ALAnimatedSpeech")
         self.waypoints = []
         self.waypointsPx = []
 
@@ -190,20 +193,26 @@ class MyClass(GeneratedClass):
         full = "data:image/png;base64," + buff64
         # show app
         self.mem.raiseEvent("Patrol/MetricalMap", [mpp, size, map[3], full])
-        #draw robot
-        self.updateRobotPosition()
 
     def updateRobotPosition(self):
-        position_list = self.nav.getRobotPositionInMap()[0]
-        position = m.Position2D(position_list[0], position_list[1])
-        pxl = self.occMap.getPixelFromPosition2D(m.Position2D(position.x, position.y))
+        robot_pose = m.Pose2D(self.nav.getRobotPositionInMap()[0])
+        position = m.Position2D(robot_pose.x, robot_pose.y)
+        pxl = self.occMap.getPixelFromPosition2D(position)
+        pxl_front = self.occMap.getPixelFromPosition2D(robot_pose * m.Pose2D(0.2, 0, 0))
         radius = 0.2 / self.occMap.mpp
-        self.mem.raiseEvent("Patrol/RobotPosition", [[int(pxl.x), int(pxl.y)], int(radius)])
-
+        self.mem.raiseEvent("Patrol/RobotPosition", [[int(pxl.x), int(pxl.y)], int(radius), [int(pxl_front.x), int(pxl_front.y)]])
 
     def onInput_onStart(self):
         self.updateMap()
+        self.tts.say("Please tell me where I am by clicking the map")
         self.onStopped()
+
+    def onInput_onRelocalize(self, target):
+        metrical_target = self.occMap.getPosition2DFromPixel(m.Position2D(target[0], target[1]))
+        self.nav.relocalizeInMap([metrical_target.x, metrical_target.y, 0.0])
+        self.nav.startLocalization()
+        self.updateRobotPosition()
+        self.tts.say("Click the button to configure Patrol")
 
     def onInput_onAddWayPoint(self, target):
         metrical_target = self.occMap.getPosition2DFromPixel(m.Position2D(target[0], target[1]))
@@ -216,7 +225,6 @@ class MyClass(GeneratedClass):
         self.tts.say("Let's patrol")
         start = self.nav.getRobotPositionInMap()[0]
         target = self.waypoints
-        target.append(m.Position2D(start[0], start[1]))
         for pt in self.waypoints:
             fut = self.nav.navigateToInMap([pt.x, pt.y, 0.0], _async=True)
             while (fut.isRunning()):
@@ -242,39 +250,8 @@ class MyClass(GeneratedClass):
                             <Input name="onAddWayPoint" type="0" type_size="1" nature="1" inner="0" tooltip="" id="4" />
                             <Input name="onStartPatrol" type="1" type_size="1" nature="1" inner="0" tooltip="" id="5" />
                             <Input name="onReset" type="1" type_size="1" nature="1" inner="0" tooltip="" id="6" />
-                            <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="7" />
-                        </Box>
-                        <Box name="Say show map" id="3" localization="8" tooltip="" x="105" y="27">
-                            <bitmap>media/images/box/box-python-script.png</bitmap>
-                            <script language="4">
-                                <content>
-                                    <![CDATA[class MyClass(GeneratedClass):
-    def __init__(self):
-        GeneratedClass.__init__(self)
-        self.tts = ALProxy('ALAnimatedSpeech')
-
-    def onLoad(self):
-        #put initialization code here
-        pass
-
-    def onUnload(self):
-        #put clean-up code here
-        pass
-
-    def onInput_onStart(self):
-        self.tts.say("OK I show the map.")
-        self.onStopped() #activate the output of the box
-        pass
-
-    def onInput_onStop(self):
-        self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
-        self.onStopped() #activate the output of the box]]>
-</content>
-                            </script>
-                            <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-                            <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
-                            <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-                            <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+                            <Input name="onRelocalize" type="0" type_size="1" nature="1" inner="0" tooltip="" id="7" />
+                            <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="8" />
                         </Box>
                         <Box name="Say exit" id="5" localization="8" tooltip="" x="978" y="11">
                             <bitmap>media/images/box/box-python-script.png</bitmap>
@@ -353,10 +330,10 @@ class MyClass(GeneratedClass):
                             <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Start the Delay box with the configured timeout value." id="2" />
                             <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Stop the wait and stimulate the output." id="3" />
                             <Output name="timerOutput" type="1" type_size="1" nature="1" inner="0" tooltip="Send a bang once delay set in parameters is elapsed, or if the box is stopped and the appropriate parameter is set." id="4" />
-                            <Parameter name="Timeout (s)" inherits_from_parent="0" content_type="2" value="5" default_value="1" min="0" max="5000" tooltip="Duration the box waits before stimulating the output." id="5" />
+                            <Parameter name="Timeout (s)" inherits_from_parent="0" content_type="2" value="3" default_value="1" min="0" max="5000" tooltip="Duration the box waits before stimulating the output." id="5" />
                             <Parameter name="Trigger timerOutput if cancelled" inherits_from_parent="0" content_type="0" value="0" default_value="1" tooltip="If the box is currently delaying at least one signal and cancelled, output will be stimulated." id="6" />
                         </Box>
-                        <Box name="Say aa" id="4" localization="8" tooltip="" x="482" y="18">
+                        <Box name="Say aa" id="4" localization="8" tooltip="" x="504" y="26">
                             <bitmap>media/images/box/box-python-script.png</bitmap>
                             <script language="4">
                                 <content>
@@ -374,7 +351,7 @@ class MyClass(GeneratedClass):
         pass
 
     def onInput_onStart(self):
-        self.tts.say("aa")
+        self.tts.say("Please load the correct exploration")
         self.onStopped() #activate the output of the box
         pass
 
@@ -388,16 +365,73 @@ class MyClass(GeneratedClass):
                             <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
                             <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
                         </Box>
-                        <Link inputowner="0" indexofinput="7" outputowner="5" indexofoutput="4" />
+                        <Box name="Load Map" id="7" localization="8" tooltip="" x="664" y="63">
+                            <bitmap>media/images/box/box-python-script.png</bitmap>
+                            <script language="4">
+                                <content>
+                                    <![CDATA[import qi
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+
+    def onLoad(self):
+        self.mem = self.session().service("ALMemory")
+        self.nav = self.session().service("ALNavigation")
+        self.tts = self.session().service("ALAnimatedSpeech")
+        self.events = {"exploList" : "Patrol/AvailableExplo"}
+        self.declareEvents()
+        self.applicationName = "Explorer"
+        pass
+
+    def declareEvents(self):
+        for k in self.events:
+            self.mem.declareEvent(self.events[k])
+
+    def onUnload(self):
+        #put clean-up code here
+        pass
+
+    def onInput_onStart(self):
+        list = qi.path.listData(self.applicationName, "*.explo")
+        if len(list) < 1:
+            self.tts.say("I have never been here, please use explore app before.")
+            self.onError()
+        self.mem.raiseEvent(self.events["exploList"], list)
+        pass
+
+    def onInput_onLoadExplo(self, exploName):
+        self.logger.info(exploName)
+        self.nav.loadExploration(exploName)
+        self.onStopped()
+
+
+    def onInput_onStop(self):
+        self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
+        self.onStopped() #activate the output of the box]]>
+</content>
+                            </script>
+                            <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+                            <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+                            <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+                            <Input name="onLoadExplo" type="3" type_size="1" nature="1" inner="0" tooltip="" id="4" />
+                            <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="5" />
+                            <Output name="onError" type="1" type_size="1" nature="2" inner="0" tooltip="" id="6" />
+                        </Box>
+                        <Link inputowner="0" indexofinput="10" outputowner="5" indexofoutput="4" />
                         <Link inputowner="6" indexofinput="2" outputowner="2" indexofoutput="3" />
                         <Link inputowner="6" indexofinput="2" outputowner="2" indexofoutput="4" />
-                        <Link inputowner="3" indexofinput="2" outputowner="0" indexofoutput="2" />
-                        <Link inputowner="2" indexofinput="2" outputowner="3" indexofoutput="4" />
                         <Link inputowner="4" indexofinput="2" outputowner="6" indexofoutput="4" />
-                        <Link inputowner="1" indexofinput="2" outputowner="4" indexofoutput="4" />
                         <Link inputowner="1" indexofinput="4" outputowner="0" indexofoutput="4" />
                         <Link inputowner="1" indexofinput="5" outputowner="0" indexofoutput="5" />
                         <Link inputowner="1" indexofinput="6" outputowner="0" indexofoutput="6" />
+                        <Link inputowner="7" indexofinput="2" outputowner="4" indexofoutput="4" />
+                        <Link inputowner="7" indexofinput="4" outputowner="0" indexofoutput="7" />
+                        <Link inputowner="1" indexofinput="2" outputowner="7" indexofoutput="5" />
+                        <Link inputowner="1" indexofinput="7" outputowner="0" indexofoutput="8" />
+                        <Link inputowner="5" indexofinput="2" outputowner="7" indexofoutput="6" />
+                        <Link inputowner="5" indexofinput="2" outputowner="0" indexofoutput="9" />
+                        <Link inputowner="2" indexofinput="2" outputowner="0" indexofoutput="2" />
                     </Diagram>
                 </BehaviorKeyframe>
             </BehaviorLayer>

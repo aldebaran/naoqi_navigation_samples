@@ -8,6 +8,8 @@ angular.module('pepper-patrol', ['ngTouch'])
         var mpp = null;
         var size = null;
         var offset = null;
+        // step : 0 = list explo, 1 = reloc, 2 = patrol.
+        var step = 0;
 
         $scope.addOnClick = function (event) {
             // event.offsetX and event.offsetY
@@ -17,7 +19,11 @@ angular.module('pepper-patrol', ['ngTouch'])
             var pxlY = event.offsetY - img.offsetTop
             if (pxlX > 0 && pxlX < img.width && pxlY > 0 && pxlY < img.height) {
                 console.log("click: " + event.offsetX + " " + event.offsetY);
-                memory.raiseEvent("Patrol/AddWayPoint", [pxlX, pxlY]);
+                if (step == 1) {
+                    memory.raiseEvent("Patrol/Relocalize", [pxlX, pxlY]);
+                } else if (step == 2) {
+                    memory.raiseEvent("Patrol/AddWayPoint", [pxlX, pxlY]);
+                }
             }
         };
 
@@ -32,6 +38,7 @@ angular.module('pepper-patrol', ['ngTouch'])
 
         $scope.setMap = function (tab) {
             console.log("setMap");
+            document.getElementById("map_loading_screen").display = "none";
             var mpp = tab[0];
             var size = tab[1];
             var offset = tab[2];
@@ -48,6 +55,8 @@ angular.module('pepper-patrol', ['ngTouch'])
             var waypoint_canvas = document.getElementById("waypoints");
             waypoint_canvas.width = size;
             waypoint_canvas.height = size;
+            document.getElementById("map_reloc").display = "block";
+            step = 1;
         };
 
         $scope.setRobot = function (tab) {
@@ -62,6 +71,10 @@ angular.module('pepper-patrol', ['ngTouch'])
             context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
             context.fillStyle="#ff0000";
             context.fill();
+            context.beginPath();
+            context.arc(tab[2][0], tab[2][1], 0.5 * radius, 0, 2 * Math.PI, false);
+            context.fillStyle="#ff0000";
+            context.fill();
         };
 
         $scope.setWaypoints = function (tab) {
@@ -72,7 +85,6 @@ angular.module('pepper-patrol', ['ngTouch'])
                 var centerX = tab[i][0];
                 var centerY = tab[i][1];
                 var radius = 5;
-                console.log("adding " + centerX + " " + centerY);
                 context.beginPath();
                 context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
                 context.fillStyle="#00ff00";
@@ -80,14 +92,40 @@ angular.module('pepper-patrol', ['ngTouch'])
             }
         };
 
+        $scope.listAvailableExplo = function(tab) {
+            for (i = 0; i < tab.length; ++i) {
+                document.forms.form.exploration_list.options[document.forms.form.exploration_list.options.length] =
+                    new Option(tab[i], tab[i]);
+            }
+        }
+
+        $scope.OnClickLoadExplo = function() {
+            var exploPath = document.forms.form.exploration_list.options[document.forms.form.exploration_list.options.selectedIndex].value;
+            console.log("load explo " + exploPath)
+            memory.raiseEvent("Patrol/LoadExploration", exploPath);
+        }
+
+        $scope.OnMapDisplay = function() {
+            step = 2;
+        }
+
+        $scope.OnRelocalizeMode = function() {
+            step = 1;
+        }
+
+        $scope.OnExit = function() {
+            memory.raiseEvent("Patrol/Exit", [])
+        }
+
         var onConnected = function (session) {
             session.service("ALMemory").then(function (service) {
                 memory = service;
             }, function (error) {
             });
-            evt_displayMap = RobotUtils.subscribeToALMemoryEvent("Patrol/MetricalMap", $scope.setMap);
-            evt_displayRobot = RobotUtils.subscribeToALMemoryEvent("Patrol/RobotPosition", $scope.setRobot);
-            evt_displayRobot = RobotUtils.subscribeToALMemoryEvent("Patrol/Waypoints", $scope.setWaypoints);
+            RobotUtils.subscribeToALMemoryEvent("Patrol/MetricalMap", $scope.setMap);
+            RobotUtils.subscribeToALMemoryEvent("Patrol/RobotPosition", $scope.setRobot);
+            RobotUtils.subscribeToALMemoryEvent("Patrol/Waypoints", $scope.setWaypoints);
+            RobotUtils.subscribeToALMemoryEvent("Patrol/AvailableExplo", $scope.listAvailableExplo);
         };
 
         var onDisconnected = function () {

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package version="0.0.1" uuid="patrol-c8782b">
+<package uuid="patrol-c8782b" version="0.0.1">
  <names>
-  <name lang="en_US">Patrol</name>
+  <name lang="en_US">patrol</name>
   <name lang="en_US-x-scrald">explore</name>
  </names>
  <descriptions>
@@ -17,9 +17,6 @@
  <contents>
   <behaviorContent path="patrol_display">
    <nature>interactive</nature>
-   <triggerSentences/>
-   <loadingResponses/>
-   <autonomous/>
    <permissions/>
   </behaviorContent>
   <behaviorContent path="all">
@@ -44,7 +41,6 @@
     <sentence lang="en_US-x-scrald">Here I go!</sentence>
     <sentence lang="en_US-x-scrald">OK, I start exploring!</sentence>
    </loadingResponses>
-   <autonomous/>
    <permissions/>
   </behaviorContent>
  </contents>
