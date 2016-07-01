@@ -225,13 +225,25 @@ class MyClass(GeneratedClass):
         self.tts.say("Let's patrol")
         start = self.nav.getRobotPositionInMap()[0]
         target = self.waypoints
+        max_attempts = 5
         for pt in self.waypoints:
-            fut = self.nav.navigateToInMap([pt.x, pt.y, 0.0], _async=True)
-            while (fut.isRunning()):
-                self.updateRobotPosition()
-                time.sleep(0.2)
+            attempt = 1
+            while (attempt <= max_attempts):
+                fut = self.nav.navigateToInMap([pt.x, pt.y, 0.0], _async=True)
+                while (fut.isRunning()):
+                    self.updateRobotPosition()
+                    time.sleep(0.2)
+                if fut.value() != 0:
+                    self.tts.say("oops, there is an obstacle")
+                    attempt += 1
+                else:
+                    break
+            if attempt > max_attempts:
+                self.tts.say("I cannot reach this point, let's skip it")
+            else:
+                self.tts.say("Alright, this point is reached")
             time.sleep(0.5)
-        self.tts.say("I am done")
+        self.tts.say("My patrol is done")
 
     def onInput_onReset(self):
         self.waypoints = []
