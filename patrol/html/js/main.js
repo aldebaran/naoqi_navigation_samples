@@ -89,6 +89,9 @@ angular.module('pepper-patrol', ['ngTouch'])
                 context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
                 context.fillStyle="#00ff00";
                 context.fill();
+                context.font = "30px Arial";
+                context.fillStyle = "#00ff00";
+                context.fillText(i.toString(), centerX + 10, centerY);
             }
         };
 
