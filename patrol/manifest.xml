@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package uuid="patrol-c8782b" version="0.0.1">
+<package uuid="patrol-c8782b" version="0.0.2">
  <names>
   <name lang="en_US">patrol</name>
-  <name lang="en_US-x-scrald">explore</name>
+  <name lang="en_US-x-scrald">patrol</name>
  </names>
  <descriptions>
   <description lang="en_US">The robot explores its environement and makes a map.</description>
@@ -31,6 +31,10 @@
     <sentence lang="en_US-x-scrald">Let's explore</sentence>
     <sentence lang="en_US-x-scrald">explore</sentence>
     <sentence lang="en_US-x-scrald">Do an exploration</sentence>
+    <sentence lang="en_US-x-scrald">Pepper Patrol</sentence>
+    <sentence lang="en_US-x-scrald">show me the patrol</sentence>
+    <sentence lang="en_US-x-scrald">Patrol</sentence>
+    <sentence lang="en_US-x-scrald">Do an Patrol</sentence>
    </triggerSentences>
    <loadingResponses>
     <sentence lang="en_US">OK, let's patrol</sentence>
@@ -40,6 +44,7 @@
     <sentence lang="en_US-x-scrald">OK, let's go!</sentence>
     <sentence lang="en_US-x-scrald">Here I go!</sentence>
     <sentence lang="en_US-x-scrald">OK, I start exploring!</sentence>
+    <sentence lang="en_US-x-scrald">OK, let's patrol</sentence>
    </loadingResponses>
    <permissions/>
   </behaviorContent>
