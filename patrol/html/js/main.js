@@ -103,7 +103,8 @@ angular.module('pepper-patrol', ['ngTouch'])
         }
 
         $scope.OnClickLoadExplo = function() {
-            var exploPath = document.forms.form.exploration_list.options[document.forms.form.exploration_list.options.selectedIndex].value;
+            var exploPath = document.forms.form.exploration_list.options[
+              document.forms.form.exploration_list.options.selectedIndex].value;
             console.log("load explo " + exploPath)
             memory.raiseEvent("Patrol/LoadExploration", exploPath);
         }
