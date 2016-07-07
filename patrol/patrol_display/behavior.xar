@@ -88,62 +88,6 @@ import time
 import almath as m
 import qi
 
-class OccupancyMap:
-
-  def __init__(self, widthInPixel, heightInPixel, metersPerPixel):
-    self.widthInPixel = widthInPixel
-    self.heightInPixel = heightInPixel
-    self.metersPerPixel = metersPerPixel
-    # Metric coordinates of the (0, 0) pixel.
-    self.originOffset = m.Position2D(0, 0)
-    self.originOffset.x = (self.widthInPixel / 2 * metersPerPixel)
-    self.originOffset.y = (self.heightInPixel / 2 * metersPerPixel)
-    self.minMetersPerPixel = 0.0001
-
-  def getPixelFromPosition2D(self, position):
-    return m.Position2D((self.originOffset.y - position.y) / self.metersPerPixel, (self.originOffset.x - position.x) / self.metersPerPixel)
-
-  def getPosition2DFromPixel(self, pixel):
-    return m.Position2D(-pixel.y * self.metersPerPixel + self.originOffset.x, -pixel.x * self.metersPerPixel + self.originOffset.y)
-
-  def scroll(self, toScroll):
-    self.originOffset = self.originOffset + toScroll
-
-  def getDeltaPositionFromDeltaPixel(self, pixel):
-    return m.Position2D(-pixel.y * self.metersPerPixel, -pixel.x * self.metersPerPixel)
-
-  # Increase metersPerPixel to zoom out and increaseit to zoom in.
-  def zoom(self, deltaMetersPerPixel, centerOfZoom):
-    previousMpp = self.metersPerPixel
-    previousPositionOfCenter = self.getPosition2DFromPixel(centerOfZoom)
-    self.metersPerPixel = max([self.metersPerPixel + deltaMetersPerPixel, self.minMetersPerPixel])
-    effectiveDelta = self.metersPerPixel - previousMpp
-    if abs(effectiveDelta) > 0.0000001:
-      # solve getPixelFromPosition2D(previousPositionOfCenter) = centerOfZoom with new parameters.
-      # i.e.
-      # (self.originOffset.y - previousPositionOfCenter.y) / self.metersPerPixel = centerOfZoom.x
-      # (self.originOffset.x - previousPositionOfCenter.x) / self.metersPerPixel = centerOfZoom.y
-      # i.e. :
-      self.originOffset.y = centerOfZoom.x * self.metersPerPixel + previousPositionOfCenter.y
-      self.originOffset.x = centerOfZoom.y * self.metersPerPixel + previousPositionOfCenter.x
-      #print self.originOffset
-
-class NavOccMap:
-  def __init__(self, size, mpp, originOffest):
-    self.size = size
-    self.mpp = mpp
-    # Metric coordinates of the (0, 0) pixel.
-    self.originOffset = m.Position2D(0, 0)
-    self.originOffset.x = originOffest.x
-    self.originOffset.y = originOffest.y
-
-  def getPosition2DFromPixel(self, pixel):
-    return m.Position2D(pixel.x * self.mpp + self.originOffset.x, -pixel.y * self.mpp + self.originOffset.y)
-
-  def getPixelFromPosition2D(self, position):
-    return m.Position2D((position.x - self.originOffset.x) / self.mpp, (self.originOffset.y - position.y) / self.mpp)
-
-
 class MyClass(GeneratedClass):
     def __init__(self):
         GeneratedClass.__init__(self)
@@ -185,7 +129,8 @@ class MyClass(GeneratedClass):
         #convert to color
         cv_img = img.astype(np.uint8)
         color_img = cv2.cvtColor(cv_img, cv.CV_GRAY2RGB)
-        self.occMap = NavOccMap(size, mpp, originOffset)
+        self.occMap = m.OccupancyMapParams(size, mpp, originOffset)
+        self.occMap.originOffset = originOffset
         # png
         flag, buff = cv2.imencode(".png", color_img)
         # base 64
@@ -197,9 +142,9 @@ class MyClass(GeneratedClass):
     def updateRobotPosition(self):
         robot_pose = m.Pose2D(self.nav.getRobotPositionInMap()[0])
         position = m.Position2D(robot_pose.x, robot_pose.y)
-        pxl = self.occMap.getPixelFromPosition2D(position)
-        pxl_front = self.occMap.getPixelFromPosition2D(robot_pose * m.Pose2D(0.2, 0, 0))
-        radius = 0.2 / self.occMap.mpp
+        pxl = self.occMap.getPixelFromPosition(position)
+        pxl_front = self.occMap.getPixelFromPosition(m.position2DFromPose2D(robot_pose * m.Pose2D(0.2, 0, 0)))
+        radius = 0.2 / self.occMap.metersPerPixel
         self.mem.raiseEvent("Patrol/RobotPosition", [[int(pxl.x), int(pxl.y)], int(radius), [int(pxl_front.x), int(pxl_front.y)]])
 
     def onInput_onStart(self):
@@ -208,14 +153,20 @@ class MyClass(GeneratedClass):
         self.onStopped()
 
     def onInput_onRelocalize(self, target):
-        metrical_target = self.occMap.getPosition2DFromPixel(m.Position2D(target[0], target[1]))
-        self.nav.relocalizeInMap([metrical_target.x, metrical_target.y, 0.0])
-        self.nav.startLocalization()
-        self.updateRobotPosition()
-        self.tts.say("Click the button to configure Patrol")
+        px = m.Point2Di(target[0], target[1])
+        metrical_target = self.occMap.getPositionFromPixel(px)
+        self.logger.info("px: " + str(px))
+        self.logger.info("relocalize at: " + str(metrical_target))
+        try:
+            self.nav.relocalizeInMap([metrical_target.x, metrical_target.y, 0.0])
+            self.nav.startLocalization()
+            self.updateRobotPosition()
+            self.tts.say("Click the button to configure Patrol")
+        except Exception as e:
+            self.logger.info(str(e))
 
     def onInput_onAddWayPoint(self, target):
-        metrical_target = self.occMap.getPosition2DFromPixel(m.Position2D(target[0], target[1]))
+        metrical_target = self.occMap.getPositionFromPixel(m.Point2Di(target[0], target[1]))
         self.logger.info("add waypoint")
         self.waypoints.append(metrical_target)
         self.waypointsPx.append([target[0], target[1]])
