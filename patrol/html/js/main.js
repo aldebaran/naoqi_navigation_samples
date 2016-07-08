@@ -10,6 +10,7 @@ angular.module('pepper-patrol', ['ngTouch'])
         var offset = null;
         // step : 0 = list explo, 1 = reloc, 2 = patrol.
         var step = 0;
+        var touch = null;
 
         $scope.addOnClick = function (event) {
             // event.offsetX and event.offsetY
@@ -17,15 +18,22 @@ angular.module('pepper-patrol', ['ngTouch'])
             var img = document.getElementById("map_container");
             var pxlX = event.offsetX - img.offsetLeft
             var pxlY = event.offsetY - img.offsetTop
+            touch = [pxlX, pxlY];
             if (pxlX > 0 && pxlX < img.width && pxlY > 0 && pxlY < img.height) {
                 console.log("click: " + event.offsetX + " " + event.offsetY);
                 if (step == 1) {
                     memory.raiseEvent("Patrol/Relocalize", [pxlX, pxlY]);
                 } else if (step == 2) {
-                    memory.raiseEvent("Patrol/AddWayPoint", [pxlX, pxlY]);
+                    document.getElementById("label_field_id").focus();
                 }
             }
         };
+
+        $scope.OnClickAddLabel = function() {
+            var label = document.getElementById("label_field_id").value;
+            console.log("add label " + label);
+            memory.raiseEvent("Patrol/AddWayPoint", [touch, label]);
+        }
 
         $scope.OnGoClick = function (event) {
             console.log("go");
@@ -82,8 +90,9 @@ angular.module('pepper-patrol', ['ngTouch'])
             var context = canvas.getContext('2d');
             context.clearRect(0, 0, canvas.width, canvas.height);
             for (i = 0; i < tab.length; ++i) {
-                var centerX = tab[i][0];
-                var centerY = tab[i][1];
+                var centerX = tab[i][0][0];
+                var centerY = tab[i][0][1];
+                var label = tab[i][1];
                 var radius = 5;
                 context.beginPath();
                 context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -91,7 +100,7 @@ angular.module('pepper-patrol', ['ngTouch'])
                 context.fill();
                 context.font = "30px Arial";
                 context.fillStyle = "#00ff00";
-                context.fillText(i.toString(), centerX + 10, centerY);
+                context.fillText(label.toString(), centerX + 10, centerY);
             }
         };
 

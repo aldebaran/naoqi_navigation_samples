@@ -21,7 +21,7 @@
             <BehaviorLayer name="behavior_layer1">
                 <BehaviorKeyframe name="keyframe1" index="1">
                     <Diagram>
-                        <Box name="Show App" id="2" localization="8" tooltip="Loads the application on the tablet, if it exists, and displays the webview.&#x0A;&#x0A;V1.0.0&#x0A;" x="247" y="27">
+                        <Box name="Show App" id="2" localization="8" tooltip="Loads the application on the tablet, if it exists, and displays the webview.&#x0A;&#x0A;V1.0.0&#x0A;" x="237" y="4">
                             <bitmap>media/images/box/root.png</bitmap>
                             <script language="4">
                                 <content>
@@ -76,7 +76,7 @@ class MyClass(GeneratedClass):
                             <Output name="onSuccess" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished successfully." id="3" />
                             <Output name="onFailure" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished unsuccessfully." id="4" />
                         </Box>
-                        <Box name="Patrol panel" id="1" localization="8" tooltip="" x="832" y="285">
+                        <Box name="Patrol panel" id="1" localization="8" tooltip="" x="888" y="154">
                             <bitmap>media/images/box/box-python-script.png</bitmap>
                             <script language="4">
                                 <content>
@@ -165,11 +165,14 @@ class MyClass(GeneratedClass):
         except Exception as e:
             self.logger.info(str(e))
 
-    def onInput_onAddWayPoint(self, target):
+    def onInput_onAddWayPoint(self, waypoint):
+        self.logger.info(waypoint)
+        target = waypoint[0]
+        label = waypoint[1]
         metrical_target = self.occMap.getPositionFromPixel(m.Point2Di(target[0], target[1]))
         self.logger.info("add waypoint")
-        self.waypoints.append(metrical_target)
-        self.waypointsPx.append([target[0], target[1]])
+        self.waypoints.append([metrical_target, label])
+        self.waypointsPx.append(waypoint)
         self.mem.raiseEvent("Patrol/Waypoints", self.waypointsPx)
 
     def onInput_onStartPatrol(self):
@@ -177,14 +180,16 @@ class MyClass(GeneratedClass):
         start = self.nav.getRobotPositionInMap()[0]
         target = self.waypoints
         max_attempts = 5
-        for pt in self.waypoints:
+        for waypoint in self.waypoints:
+            pt = waypoint[0]
+            label = waypoint[1]
             attempt = 1
             while (attempt <= max_attempts):
                 fut = self.nav.navigateToInMap([pt.x, pt.y, 0.0], _async=True)
                 while (fut.isRunning()):
                     self.updateRobotPosition()
                     time.sleep(0.2)
-                if fut.value() != 0:
+                if fut.value() != 3:
                     self.tts.say("oops, there is an obstacle")
                     attempt += 1
                 else:
@@ -192,7 +197,7 @@ class MyClass(GeneratedClass):
             if attempt > max_attempts:
                 self.tts.say("I cannot reach this point, let's skip it")
             else:
-                self.tts.say("Alright, this point is reached")
+                self.tts.say("I have reached " + str(label))
             time.sleep(0.5)
         self.tts.say("My patrol is done")
 
