@@ -1,0 +1,234 @@
+import qi
+import os
+import time
+import cv2
+import cv
+import numpy as np
+import almath as m
+import base64
+try:
+    import cPickle as pickle
+except:
+    import pickle
+
+class ExplorationManagerHandler:
+    def __init__(self, session):
+        self.session = session
+        self.serviceName = "ExplorationManager"
+        self.service_id = None
+        self.registerExplorationManager()
+
+    def registerExplorationManager(self):
+        try:
+            service = self.session.service("ExplorationManager")
+            return True
+        except:
+            service = None
+        if service == None:
+            try:
+                self.service_id = self.session.registerService("ExplorationManager", ExplorationManager(self.session))
+                return True
+            except:
+                return False
+
+    def exit(self):
+        if self.service_id != None:
+            self.session.unregisterService(self.service_id)
+
+@qi.multiThreaded()
+class EventHelper:
+
+    def __init__(self, memory, subscribers):
+        self.subscribers    = subscribers
+        self.memory         = memory
+        self.serviceName    = "EventHelper"
+        self.subscribeToggle= False
+        self.connectSubscribers()
+
+    @qi.bind()
+    def connectSubscribers(self):
+        """ generate & connect all subscribers to callbacks """
+        if not self.subscribeToggle:
+            for event in self.subscribers.keys():
+                self.subscribers[event]["subscriber"] = self.memory.subscriber(event)
+                self.subscribers[event]["uid"]        = self.subscribers[event]["subscriber"].signal.connect(self.subscribers[event]["callback"])
+            self.subscribeToggle = True
+
+    @qi.bind()
+    def disconnectSubscribers(self):
+        """ disconnect all subscribers from callbacks """
+        qi.info(self.serviceName, "DISCONNECTING SUBSCRIBERS")
+        if self.subscribeToggle:
+            for event in self.subscribers.keys():
+                future = qi.async(self.disconnectSubscriber, event, delay = 0)
+                future.wait(1000) # add a timeout to avoid deadlock
+                if not future.isFinished():
+                    qi.error(self.serviceName, "disconnectSubscribers", "Failed disconnecting %s subscribers" % event)
+            self.subscribeToggle = False
+
+class ExplorationManager:
+
+    def __new__(cls, session):
+        return super(ExplorationManager, cls).__new__(cls)
+
+    def __init__(self, session):
+        self.session = session
+        self.nav = self.session.service("ALNavigation")
+        self.tabletService = self.session.service("ALTabletService")
+        self.memory = self.session.service("ALMemory")
+        self.application_name = "ExplorationManager"
+        self.explorer_application_name = "Explorer"
+        self.current_places = None
+        self.logger = qi.Logger("ExplorationManager")
+        self.explo_extension = ".explo"
+        self.places_extension = ".places"
+        self.packageUid = "exploration-manager"
+        self.subscribers = {
+            "Patrol/LoadExploration": {"callback": self.loadPlaces},
+            "Patrol/Save": {"callback": self.savePlacesEvent},
+            "Patrol/AddPlace": {"callback": self.addPlacePx}
+        }
+        self.events = {"metricalMap": "Patrol/MetricalMap",
+                       "exploList": "Patrol/AvailableExplo",
+                       "places": "Patrol/Places"}
+        self.eventHelper = EventHelper(self.memory, self.subscribers)
+
+    def isExplorationLoaded(self):
+        try:
+            self.nav.getRobotPositionInMap()
+            places_loaded = "name" in self.current_places and "places" in self.current_places
+        except:
+            return False
+        return places_loaded
+
+    def getPlaces(self):
+        return self.current_places["places"]
+
+    def getPlaceLocation(self, label):
+        if label in self.current_places["places"]:
+            return self.current_places["places"][label]
+        return None
+
+    def loadExploration(self, name):
+        explo_path = qi.path.findData(self.explorer_application_name, name + self.explo_extension, False)
+        if len(explo_path) > 0:
+            try:
+                if not(self.nav.loadExploration(explo_path)):
+                    return False
+                self.current_places = {}
+                self.current_places["name"] = name
+                self.current_places["places"] = {}
+            except Exception as e:
+                self.logger.error("Unable to load explo: " + str(e))
+                return False
+            return True
+        self.logger.error("No such explo file: " + name)
+        return False
+
+    def loadPlaces(self, name):
+        self.logger.info("load places")
+        available_explo = qi.path.findData(self.application_name, name + self.places_extension, False)
+        if len(available_explo) > 0:
+            #load an existing annotated explo
+            in_file = open(available_explo, "rb")
+            data = pickle.load(in_file)
+            if not("name" in data) or not("places" in data):
+                self.logger.error("wrong annoted explo format")
+                return False
+            self.current_places = data
+            explo_path = qi.path.findData(self.explorer_application_name, name + self.explo_extension, False)
+            if len(explo_path) > 0:
+                try:
+                    self.nav.loadExploration(explo_path)
+                except Exception as e:
+                    self.logger.warning("Unable to load places: " + str(e))
+                    return False
+            else:
+                return False
+        elif not(self.loadExploration(name)):
+            return False
+        self.showPlaces()
+        return True
+
+    def savePlacesEvent(self, useless):
+        self.savePlaces()
+        
+    def savePlaces(self):
+        path = qi.path.userWritableDataPath(self.application_name, self.current_places["name"] + self.places_extension)
+        out_file = open(path, "wb")
+        pickle.dump(self.current_places, out_file)
+        self.logger.info("places saved to : " + path)
+        return path
+
+    def getAvailableExplorations(self):
+        data = qi.path.listData(self.explorer_application_name, "*" + self.explo_extension)
+        return self.getBasenameList(data)
+
+    def getAvailablePlaces(self):
+        data = qi.path.listData(self.application_name, "*" + self.places_extension)
+        return self.getBasenameList(data)
+
+    def getBasenameList(self, data):
+        result = []
+        for path in data:
+            basename = os.path.basename(path)
+            result.append(basename[:len(basename) - 6])
+        return result
+                
+    def addPlacePx(self, place):
+        pt = self.occMap.getPositionFromPixel(m.Point2Di(place[0][0], place[0][1]))
+        label = place[1]
+        self.addPlace(label, [pt.x, pt.y])
+        
+    def addPlace(self, label, position):
+        self.logger.info("adding " + label)
+        self.current_places["places"][label] = position
+        self.showLabels()
+
+    def showWebPage(self):
+        appName = self.packageUid
+        if self.tabletService.loadApplication(appName):
+            self.logger.info("Successfully set application: %s" % appName)
+            self.tabletService.showWebview()
+            time.sleep(2)
+        else:
+            self.logger.warning("Got tablet service, but failed to set application: %s" % appName)
+            return
+            
+    def showLabels(self):
+        place_list = []
+        for place in self.current_places["places"]:
+            current_place = self.current_places["places"][place]
+            pos = self.occMap.getPixelFromPosition(m.Position2D(current_place[0], current_place[1]))
+            place_list.append([[pos.x, pos.y], place])
+        self.memory.raiseEvent(self.events["places"], place_list)
+
+    def showPlaces(self):
+        # Get the map from navigation.
+        map = self.nav.getMetricalMap()
+        mpp = map[0]
+        size = map[1]
+        originOffset = m.Position2D(map[3])
+        data = map[4]
+        # Fit the size of the image
+        img = np.array(data, np.uint8).reshape(size, size, 1)
+        img = (100 - img) * 2.5
+        img = img.transpose((1, 0, 2)) # Do not transpose the channels.
+        tabletSize = 720
+        img = cv2.resize(img, (tabletSize, tabletSize))
+        mpp = size * mpp / tabletSize
+        size = tabletSize
+        #convert to color
+        cv_img = img.astype(np.uint8)
+        color_img = cv2.cvtColor(cv_img, cv.CV_GRAY2RGB)
+        self.occMap = m.OccupancyMapParams(size, mpp, originOffset)
+        self.occMap.originOffset = originOffset
+        # png
+        flag, buff = cv2.imencode(".png", color_img)
+        # base 64
+        buff64 = base64.b64encode(buff)
+        full = "data:image/png;base64," + buff64
+        # show app
+        self.memory.raiseEvent(self.events["metricalMap"], [mpp, size, map[3], full])
+        self.showLabels()
+

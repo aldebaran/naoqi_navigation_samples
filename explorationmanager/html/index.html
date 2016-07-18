@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html ng-app="pepper-patrol">
+<head>
+  <style>
+    body {
+      font-size: 24pt;
+    }
+
+    #wrapper canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #ui {
+      position:absolute;
+      top:50px;
+      right:50px;
+    }
+  </style>
+
+  <meta name="viewport" content="width=1280, user-scalable=no" />
+</head>
+<body ng-controller="map-display">
+  <div id="wrapper">
+    <canvas id="map_container" ></canvas>
+    <canvas id="places" ng-click="addOnClick($event)"></canvas>
+  </div>
+  <div id="ui">
+    <div id="map_loading_screen">
+      <form name="form">
+        <p>
+<!-- une balise select ou input ne peut pas être imbriquée directement dans form -->
+          <select name="exploration_list">
+          </select>
+          <input type="submit" value="Load" ng-click="OnClickLoadExplo()"/>
+        </p>
+      </form>
+    </div>
+    <div id="map_reloc" display="none">
+      <button ng-click="OnMapDisplay($event)">Configure Patrol</button>
+      <button ng-click="OnRelocalizeMode($event)">Relocalize the robot</button>
+    </div>
+    <div id="patrol_screen" display="none">
+      <button ng-click="OnGoClick($event)">Patrol</button>
+      <button ng-click="OnResetClick($event)">Reset</button>
+    </div>
+    <div id="general">
+      <button ng-click="OnExit($event)">Exit</button>
+      <button ng-click="OnSave($event)">Save</button>
+    </div>
+    <div id="label">
+      <form>
+        <input id="label_field_id" type="text" name="label_field">
+        <input type="submit" value="Add" ng-click="OnClickAddLabel()"/>
+      </form>
+    </div>
+  </div>
+
+  <!-- <script src="js/jquery-1.11.0.min.js"></script>-->
+  <script src="js/robotutils.js"></script>
+  <script src="js/angular.min.js"></script>
+  <script src="js/angular-touch.min.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+
+
+</script>
+
+</body>
+</html>
