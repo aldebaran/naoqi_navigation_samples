@@ -8,40 +8,29 @@ angular.module('pepper-patrol', ['ngTouch'])
         var mpp = null;
         var size = null;
         var offset = null;
-        // step : 0 = list explo, 1 = reloc, 2 = patrol.
-        var step = 0;
         var touch = null;
 
         $scope.addOnClick = function (event) {
-            // event.offsetX and event.offsetY
-            // compute
             var img = document.getElementById("map_container");
             var pxlX = event.offsetX - img.offsetLeft
             var pxlY = event.offsetY - img.offsetTop
             touch = [pxlX, pxlY];
             if (pxlX > 0 && pxlX < img.width && pxlY > 0 && pxlY < img.height) {
                 console.log("click: " + event.offsetX + " " + event.offsetY);
-                if (step == 1) {
-                    memory.raiseEvent("Patrol/Relocalize", [pxlX, pxlY]);
-                } else if (step == 2) {
-                    document.getElementById("label_field_id").focus();
-                }
+                var label_field = document.getElementById("label_field_id");
+                label_field.value = "";
+                label_field.focus();
             }
         };
 
         $scope.OnClickAddLabel = function() {
             var label = document.getElementById("label_field_id").value;
             console.log("add label " + label);
-            memory.raiseEvent("Patrol/AddPlace", [touch, label]);
-        }
-
-        $scope.OnGoClick = function (event) {
-            console.log("go");
-            memory.raiseEvent("Patrol/StartPatrol", [])
+            memory.raiseEvent("Places/AddPlace", [touch, label]);
         }
 
         $scope.OnResetClick = function(event) {
-            memory.raiseEvent("Patrol/Reset", [])
+            memory.raiseEvent("Places/Reset", [])
         }
 
         $scope.setMap = function (tab) {
@@ -57,32 +46,12 @@ angular.module('pepper-patrol', ['ngTouch'])
             map_container.width = size;
             map_container.height = size;
             angular.element(map_container).css({
-            'background-image': 'url(' + data +')',
-            'background-size' : 'cover'
+              'background-image': 'url(' + data +')',
+              'background-size' : 'cover'
             });
             var waypoint_canvas = document.getElementById("places");
             waypoint_canvas.width = size;
             waypoint_canvas.height = size;
-            document.getElementById("map_reloc").display = "block";
-            step = 1;
-        };
-
-        $scope.setRobot = function (tab) {
-            console.log("setRobot");
-            var centerX = tab[0][0];
-            var centerY = tab[0][1];
-            var radius = tab[1];
-            var canvas = document.getElementById('map_container');
-            var context = canvas.getContext('2d');
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            context.beginPath();
-            context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-            context.fillStyle="#ff0000";
-            context.fill();
-            context.beginPath();
-            context.arc(tab[2][0], tab[2][1], 0.5 * radius, 0, 2 * Math.PI, false);
-            context.fillStyle="#ff0000";
-            context.fill();
         };
 
         $scope.setPlaces = function (tab) {
@@ -105,6 +74,8 @@ angular.module('pepper-patrol', ['ngTouch'])
         };
 
         $scope.listAvailableExplo = function(tab) {
+            console.log("list");
+            // TODO: clear previous list
             for (i = 0; i < tab.length; ++i) {
                 document.forms.form.exploration_list.options[document.forms.form.exploration_list.options.length] =
                     new Option(tab[i], tab[i]);
@@ -115,23 +86,15 @@ angular.module('pepper-patrol', ['ngTouch'])
             var exploPath = document.forms.form.exploration_list.options[
               document.forms.form.exploration_list.options.selectedIndex].value;
             console.log("load explo " + exploPath)
-            memory.raiseEvent("Patrol/LoadExploration", exploPath);
-        }
-
-        $scope.OnMapDisplay = function() {
-            step = 2;
-        }
-
-        $scope.OnRelocalizeMode = function() {
-            step = 1;
+            memory.raiseEvent("Places/LoadPlaces", exploPath);
         }
 
         $scope.OnExit = function() {
-            memory.raiseEvent("Patrol/Exit", [])
+            memory.raiseEvent("Places/Exit", [])
         }
 
         $scope.OnSave = function() {
-            memory.raiseEvent("Patrol/Save", [])
+            memory.raiseEvent("Places/Save", [])
         }
 
         var onConnected = function (session) {
@@ -139,10 +102,9 @@ angular.module('pepper-patrol', ['ngTouch'])
                 memory = service;
             }, function (error) {
             });
-            RobotUtils.subscribeToALMemoryEvent("Patrol/MetricalMap", $scope.setMap);
-            RobotUtils.subscribeToALMemoryEvent("Patrol/RobotPosition", $scope.setRobot);
-            RobotUtils.subscribeToALMemoryEvent("Patrol/Places", $scope.setPlaces);
-            RobotUtils.subscribeToALMemoryEvent("Patrol/AvailableExplo", $scope.listAvailableExplo);
+            RobotUtils.subscribeToALMemoryEvent("ExplorationManager/MetricalMap", $scope.setMap);
+            RobotUtils.subscribeToALMemoryEvent("ExplorationManager/Places", $scope.setPlaces);
+            RobotUtils.subscribeToALMemoryEvent("Places/AvailableExplo", $scope.listAvailableExplo);
         };
 
         var onDisconnected = function () {

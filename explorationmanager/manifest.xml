@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <package uuid="exploration-manager" version="0.0.1">
  <names>
-  <name lang="en_US">exploration-manager</name>
-  <name lang="en_US-x-scrald">patrol</name>
+  <name lang="en_US">Places</name>
+  <name lang="en_US-x-scrald">Places</name>
  </names>
  <descriptions>
   <description lang="en_US">The robot explores its environement and makes a map.</description>
@@ -16,7 +16,16 @@
  </descriptionLanguages>
  <contents>
   <behaviorContent path="display_places">
+   <userRequestable/>
    <nature>interactive</nature>
+   <names>
+    <name lang="en_US">display_places</name>
+   </names>
+   <triggerSentences>
+    <sentence lang="en_US">Show me the places</sentence>
+    <sentence lang="en_US">Places</sentence>
+    <sentence lang="en_US">Show me the nearby places</sentence>
+   </triggerSentences>
    <permissions/>
   </behaviorContent>
  </contents>
@@ -24,4 +33,7 @@
   <naoqiRequirement minVersion="2.5"/>
   <robotRequirement model="JULIETTE_Y20"/>
  </requirements>
+ <services>
+  <service name="explorationManager" autorun="true" execStart="python explorationManager.py"/>
+ </services>
 </package>

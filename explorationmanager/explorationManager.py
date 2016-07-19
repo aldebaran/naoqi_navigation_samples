@@ -6,34 +6,11 @@ import cv
 import numpy as np
 import almath as m
 import base64
+import sys
 try:
     import cPickle as pickle
 except:
     import pickle
-
-class ExplorationManagerHandler:
-    def __init__(self, session):
-        self.session = session
-        self.serviceName = "ExplorationManager"
-        self.service_id = None
-        self.registerExplorationManager()
-
-    def registerExplorationManager(self):
-        try:
-            service = self.session.service("ExplorationManager")
-            return True
-        except:
-            service = None
-        if service == None:
-            try:
-                self.service_id = self.session.registerService("ExplorationManager", ExplorationManager(self.session))
-                return True
-            except:
-                return False
-
-    def exit(self):
-        if self.service_id != None:
-            self.session.unregisterService(self.service_id)
 
 @qi.multiThreaded()
 class EventHelper:
@@ -84,22 +61,28 @@ class ExplorationManager:
         self.places_extension = ".places"
         self.packageUid = "exploration-manager"
         self.subscribers = {
-            "Patrol/LoadExploration": {"callback": self.loadPlaces},
-            "Patrol/Save": {"callback": self.savePlacesEvent},
-            "Patrol/AddPlace": {"callback": self.addPlacePx}
+            "Places/LoadPlaces": {"callback": self.loadPlaces},
+            "Places/Save": {"callback": self.savePlacesEvent},
+            "Places/AddPlace": {"callback": self.addPlacePx}
         }
-        self.events = {"metricalMap": "Patrol/MetricalMap",
-                       "exploList": "Patrol/AvailableExplo",
-                       "places": "Patrol/Places"}
+        self.events = {"metricalMap": "ExplorationManager/MetricalMap",
+                       "places": "ExplorationManager/Places"}
         self.eventHelper = EventHelper(self.memory, self.subscribers)
 
     def isExplorationLoaded(self):
         try:
-            self.nav.getRobotPositionInMap()
+            self.nav.getExplorationPath()
             places_loaded = "name" in self.current_places and "places" in self.current_places
         except:
             return False
         return places_loaded
+
+    def isLocalized(self):
+        try:
+            self.nav.getRobotPositionInMap()
+            return True
+        except:
+            return False
 
     def getPlaces(self):
         return self.current_places["places"]
@@ -183,19 +166,20 @@ class ExplorationManager:
     def addPlace(self, label, position):
         self.logger.info("adding " + label)
         self.current_places["places"][label] = position
-        self.showLabels()
+        self.publishLabels()
 
     def showWebPage(self):
         appName = self.packageUid
         if self.tabletService.loadApplication(appName):
             self.logger.info("Successfully set application: %s" % appName)
             self.tabletService.showWebview()
-            time.sleep(2)
+            time.sleep(4)
+            return True
         else:
             self.logger.warning("Got tablet service, but failed to set application: %s" % appName)
-            return
+            return False
             
-    def showLabels(self):
+    def publishLabels(self):
         place_list = []
         for place in self.current_places["places"]:
             current_place = self.current_places["places"][place]
@@ -204,6 +188,10 @@ class ExplorationManager:
         self.memory.raiseEvent(self.events["places"], place_list)
 
     def showPlaces(self):
+        self.publishMap()
+        self.publishLabels()
+        
+    def publishMap(self):
         # Get the map from navigation.
         map = self.nav.getMetricalMap()
         mpp = map[0]
@@ -230,5 +218,26 @@ class ExplorationManager:
         full = "data:image/png;base64," + buff64
         # show app
         self.memory.raiseEvent(self.events["metricalMap"], [mpp, size, map[3], full])
-        self.showLabels()
 
+    def getOccupancyMapParams(self):
+        return [self.occMap.size, self.occMap.metersPerPixel, self.occMap.originOffset.toVector()]
+
+if __name__ == "__main__":
+    app = qi.Application(sys.argv)
+    app.start()
+    session = app.session
+
+    #get the logs
+    mod = qi.module("qicore")
+    provider = mod.initializeLogging(app.session)
+
+    # don't forget to check that the services you use are ready!
+    for required_service in ["ALMemory", "ALNavigation", "ALTabletService"]:
+        future = session.waitForService(required_service)
+        if future is not None:
+            future.wait()
+    qi.info("test", "done")
+    my_service = ExplorationManager(session)
+    qi.info("test", "registering")
+    register_id = session.registerService("ExplorationManager", my_service)
+    app.run()

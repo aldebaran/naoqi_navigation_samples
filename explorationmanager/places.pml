@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Package name="explore" format_version="4">
+<Package name="places" format_version="4">
     <Manifest src="manifest.xml" />
     <BehaviorDescriptions>
         <BehaviorDescription name="behavior" src="display_places" xar="behavior.xar" />
@@ -25,7 +25,7 @@
         <File name="spinningwheel" src="html/js/spinningwheel.js" />
         <File name="__init__" src="__init__.py" />
         <File name="__init__" src="display_places/__init__.py" />
-        <File name="explorationManager" src="display_places/explorationManager.py" />
+        <File name="explorationManager" src="explorationManager.py" />
     </Resources>
     <Topics />
     <IgnoredPaths />

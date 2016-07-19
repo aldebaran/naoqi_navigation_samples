@@ -10,17 +10,18 @@
         <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
         <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
         <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-        <Input name="Patrol/Exit" type="0" type_size="1" nature="4" stm_value_name="Patrol/Exit" inner="1" tooltip="Patrol/Exit desc" id="4" />
+        <Input name="Places/Exit" type="0" type_size="1" nature="4" stm_value_name="Places/Exit" inner="1" tooltip="Places/Exit desc" id="4" />
         <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="5" />
         <Timeline enable="0">
             <BehaviorLayer name="behavior_layer1">
                 <BehaviorKeyframe name="keyframe1" index="1">
                     <Diagram>
-                        <Box name="Display map" id="1" localization="8" tooltip="" x="511" y="313">
+                        <Box name="Display map" id="1" localization="8" tooltip="" x="523" y="33">
                             <bitmap>media/images/box/box-python-script.png</bitmap>
                             <script language="4">
                                 <content>
                                     <![CDATA[import time
+
 class MyClass(GeneratedClass):
     def __init__(self):
         GeneratedClass.__init__(self)
@@ -28,11 +29,18 @@ class MyClass(GeneratedClass):
             self.exploManager = self.session().service("ExplorationManager")
         except Exception as e:
             self.logger.warning("Unable to reach ExplorationManager service: " + str(e))
+            self.exploManager = None
+            self.onUnload()
             self.onStopped()
         self.mem = self.session().service("ALMemory")
         self.tts = self.session().service("ALAnimatedSpeech")
-        self.packageUid = "patrol-c8782b"
-        self.events = {"exploList": "Patrol/AvailableExplo"}
+        self.life = self.session().service("ALAutonomousLife")
+        self.life.setSafeguardEnabled("RobotMoved", False)
+        self.life.setSafeguardEnabled("RobotPushed", False)
+        self.ba = self.session().service("ALBasicAwareness")
+        self.ba.stopAwareness()
+        self.events = {"exploList": "Places/AvailableExplo",
+                        "exit": "Places/Exit"}
         self.declareEvents()
 
     def declareEvents(self):
@@ -47,12 +55,13 @@ class MyClass(GeneratedClass):
         pass
 
     def onInput_onStart(self):
-        self.exploManager.showWebPage()
-        time.sleep(1)
+        if self.exploManager == None or not(self.exploManager.showWebPage()):
+            self.onStopped()
+            return
         #self.onStopped() #activate the output of the box
-        list = []
-        if not self.exploManager.isExplorationLoaded():
-            list = self.exploManager.getAvailableExplorations()
+        list = self.exploManager.getAvailableExplorations()
+        if self.exploManager.isExplorationLoaded():
+            self.exploManager.showPlaces()
         self.logger.info("available explo: " + str(list))
         if len(list) < 1:
             self.tts.say("I have never been here, please use explore app before.")

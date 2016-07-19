@@ -17,6 +17,14 @@
       top:50px;
       right:50px;
     }
+
+    input {
+      width: 20em;  height: 4em;
+    }
+
+    button{
+      width: 20em;  height: 4em;
+    }
   </style>
 
   <meta name="viewport" content="width=1280, user-scalable=no" />
@@ -37,12 +45,7 @@
         </p>
       </form>
     </div>
-    <div id="map_reloc" display="none">
-      <button ng-click="OnMapDisplay($event)">Configure Patrol</button>
-      <button ng-click="OnRelocalizeMode($event)">Relocalize the robot</button>
-    </div>
     <div id="patrol_screen" display="none">
-      <button ng-click="OnGoClick($event)">Patrol</button>
       <button ng-click="OnResetClick($event)">Reset</button>
     </div>
     <div id="general">
