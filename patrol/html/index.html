@@ -17,6 +17,13 @@
       top:50px;
       right:50px;
     }
+    input {
+      width: 20em;  height: 4em;
+    }
+
+    button{
+      width: 20em;  height: 4em;
+    }
   </style>
 
   <meta name="viewport" content="width=1280, user-scalable=no" />
@@ -24,19 +31,10 @@
 <body ng-controller="map-display">
   <div id="wrapper">
     <canvas id="map_container" ></canvas>
-    <canvas id="waypoints" ng-click="addOnClick($event)"></canvas>
+    <canvas id="places_canvas" ></canvas>
+    <canvas id="waypoints_canvas" ng-click="addOnClick($event)"></canvas>
   </div>
   <div id="ui">
-    <div id="map_loading_screen">
-      <form name="form">
-        <p>
-<!-- une balise select ou input ne peut pas être imbriquée directement dans form -->
-          <select name="exploration_list">
-          </select>
-          <input type="submit" value="Load" ng-click="OnClickLoadExplo()"/>
-        </p>
-      </form>
-    </div>
     <div id="map_reloc" display="none">
       <button ng-click="OnMapDisplay($event)">Configure Patrol</button>
       <button ng-click="OnRelocalizeMode($event)">Relocalize the robot</button>
@@ -47,12 +45,6 @@
     </div>
     <div id="general">
       <button ng-click="OnExit($event)">Exit</button>
-    </div>
-    <div id="label">
-      <form>
-        <input id="label_field_id" type="text" name="label_field">
-        <input type="submit" value="Add" ng-click="OnClickAddLabel()"/>
-      </form>
     </div>
   </div>
 

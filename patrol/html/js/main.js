@@ -24,16 +24,10 @@ angular.module('pepper-patrol', ['ngTouch'])
                 if (step == 1) {
                     memory.raiseEvent("Patrol/Relocalize", [pxlX, pxlY]);
                 } else if (step == 2) {
-                    document.getElementById("label_field_id").focus();
+                    memory.raiseEvent("Patrol/AddWayPoint", [pxlX, pxlY]);
                 }
             }
         };
-
-        $scope.OnClickAddLabel = function() {
-            var label = document.getElementById("label_field_id").value;
-            console.log("add label " + label);
-            memory.raiseEvent("Patrol/AddWayPoint", [touch, label]);
-        }
 
         $scope.OnGoClick = function (event) {
             console.log("go");
@@ -46,7 +40,6 @@ angular.module('pepper-patrol', ['ngTouch'])
 
         $scope.setMap = function (tab) {
             console.log("setMap");
-            document.getElementById("map_loading_screen").display = "none";
             var mpp = tab[0];
             var size = tab[1];
             var offset = tab[2];
@@ -60,10 +53,12 @@ angular.module('pepper-patrol', ['ngTouch'])
             'background-image': 'url(' + data +')',
             'background-size' : 'cover'
             });
-            var waypoint_canvas = document.getElementById("waypoints");
+            var waypoint_canvas = document.getElementById("waypoints_canvas");
             waypoint_canvas.width = size;
             waypoint_canvas.height = size;
-            document.getElementById("map_reloc").display = "block";
+            var places_canvas = document.getElementById("places_canvas");
+            places_canvas.width = size;
+            places_canvas.height = size;
             step = 1;
         };
 
@@ -85,8 +80,8 @@ angular.module('pepper-patrol', ['ngTouch'])
             context.fill();
         };
 
-        $scope.setWaypoints = function (tab) {
-            var canvas = document.getElementById('waypoints');
+        $scope.setPlaces = function (tab) {
+            var canvas = document.getElementById('places_canvas');
             var context = canvas.getContext('2d');
             context.clearRect(0, 0, canvas.width, canvas.height);
             for (i = 0; i < tab.length; ++i) {
@@ -103,20 +98,24 @@ angular.module('pepper-patrol', ['ngTouch'])
                 context.fillText(label.toString(), centerX + 10, centerY);
             }
         };
-
-        $scope.listAvailableExplo = function(tab) {
+        $scope.setWaypoints = function (tab) {
+            var canvas = document.getElementById('waypoints_canvas');
+            var context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.lineWidth = 1.5;
+            context.strokeStyle = 'red';
+            context.beginPath();
             for (i = 0; i < tab.length; ++i) {
-                document.forms.form.exploration_list.options[document.forms.form.exploration_list.options.length] =
-                    new Option(tab[i], tab[i]);
+                var centerX = tab[i][0];
+                var centerY = tab[i][1];
+                var label = i.toString();
+                context.lineTo(centerX, centerY);
+                context.stroke();
+                context.font = "30px Arial";
+                context.fillStyle = "red";
+                context.fillText(label, centerX + 10, centerY);
             }
-        }
-
-        $scope.OnClickLoadExplo = function() {
-            var exploPath = document.forms.form.exploration_list.options[
-              document.forms.form.exploration_list.options.selectedIndex].value;
-            console.log("load explo " + exploPath)
-            memory.raiseEvent("Patrol/LoadExploration", exploPath);
-        }
+        };
 
         $scope.OnMapDisplay = function() {
             step = 2;
@@ -135,10 +134,10 @@ angular.module('pepper-patrol', ['ngTouch'])
                 memory = service;
             }, function (error) {
             });
-            RobotUtils.subscribeToALMemoryEvent("Patrol/MetricalMap", $scope.setMap);
+            RobotUtils.subscribeToALMemoryEvent("ExplorationManager/MetricalMap", $scope.setMap);
             RobotUtils.subscribeToALMemoryEvent("Patrol/RobotPosition", $scope.setRobot);
+            RobotUtils.subscribeToALMemoryEvent("ExplorationManager/Places", $scope.setPlaces);
             RobotUtils.subscribeToALMemoryEvent("Patrol/Waypoints", $scope.setWaypoints);
-            RobotUtils.subscribeToALMemoryEvent("Patrol/AvailableExplo", $scope.listAvailableExplo);
         };
 
         var onDisconnected = function () {

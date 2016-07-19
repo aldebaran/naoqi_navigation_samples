@@ -20,22 +20,14 @@
    <names>
     <name lang="en_US">Patrol display</name>
    </names>
-   <triggerSentences/>
-   <loadingResponses/>
-   <autonomous/>
    <permissions/>
   </behaviorContent>
   <behaviorContent path="all">
-   <userRequestable/>
    <nature>interactive</nature>
    <names>
     <name lang="en_US">Patrol launcher</name>
    </names>
    <triggerSentences>
-    <sentence lang="en_US">Pepper Patrol</sentence>
-    <sentence lang="en_US">show me the patrol</sentence>
-    <sentence lang="en_US">Patrol</sentence>
-    <sentence lang="en_US">Do an Patrol</sentence>
     <sentence lang="en_US-x-scrald">Pepper explore</sentence>
     <sentence lang="en_US-x-scrald">Let's explore</sentence>
     <sentence lang="en_US-x-scrald">explore</sentence>
@@ -55,7 +47,15 @@
     <sentence lang="en_US-x-scrald">OK, I start exploring!</sentence>
     <sentence lang="en_US-x-scrald">OK, let's patrol</sentence>
    </loadingResponses>
-   <autonomous/>
+   <permissions/>
+  </behaviorContent>
+  <behaviorContent path="patrol_panel">
+   <userRequestable/>
+   <nature>interactive</nature>
+   <triggerSentences>
+    <sentence lang="en_US">Patrol Panel</sentence>
+    <sentence lang="en_US">Pepper Patrol</sentence>
+   </triggerSentences>
    <permissions/>
   </behaviorContent>
  </contents>

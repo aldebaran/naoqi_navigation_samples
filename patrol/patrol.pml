@@ -4,6 +4,7 @@
     <BehaviorDescriptions>
         <BehaviorDescription name="behavior" src="patrol_display" xar="behavior.xar" />
         <BehaviorDescription name="behavior" src="all" xar="behavior.xar" />
+        <BehaviorDescription name="behavior" src="patrol_panel" xar="behavior.xar" />
     </BehaviorDescriptions>
     <Dialogs />
     <Resources>
