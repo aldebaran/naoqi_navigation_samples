@@ -18,11 +18,11 @@
       right:50px;
     }
     input {
-      width: 20em;  height: 4em;
+      width: 15em;  height: 4em;
     }
 
     button{
-      width: 20em;  height: 4em;
+      width: 15em;  height: 4em;
     }
   </style>
 
@@ -35,11 +35,11 @@
     <canvas id="waypoints_canvas" ng-click="addOnClick($event)"></canvas>
   </div>
   <div id="ui">
-    <div id="map_reloc" display="none">
+    <div id="mode_ui" style="visibility:hidden">
       <button ng-click="OnMapDisplay($event)">Configure Patrol</button>
       <button ng-click="OnRelocalizeMode($event)">Relocalize the robot</button>
     </div>
-    <div id="patrol_screen" display="none">
+    <div id="waypoints_ui" style="visibility:hidden">
       <button ng-click="OnGoClick($event)">Patrol</button>
       <button ng-click="OnResetClick($event)">Reset</button>
     </div>

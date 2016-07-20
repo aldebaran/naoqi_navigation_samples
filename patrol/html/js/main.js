@@ -60,6 +60,8 @@ angular.module('pepper-patrol', ['ngTouch'])
             places_canvas.width = size;
             places_canvas.height = size;
             step = 1;
+            document.getElementById("mode_ui").style.visibility = "visible";
+            document.getElementById("waypoints_ui").style.visibility = "visible";
         };
 
         $scope.setRobot = function (tab) {
