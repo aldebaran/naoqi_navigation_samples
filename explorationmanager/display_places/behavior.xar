@@ -60,13 +60,18 @@ class MyClass(GeneratedClass):
             return
         #self.onStopped() #activate the output of the box
         list = self.exploManager.getAvailableExplorations()
-        if self.exploManager.isExplorationLoaded():
-            self.exploManager.showPlaces()
-        self.logger.info("available explo: " + str(list))
         if len(list) < 1:
             self.tts.say("I have never been here, please use explore app before.")
             self.onStopped()
+            return
         self.mem.raiseEvent(self.events["exploList"], list)
+        if self.exploManager.isExplorationLoaded():
+            self.exploManager.showPlaces()
+            self.tts.say("You can add new places to the map by clicking on it. Don't forget to save them")
+        else:
+            self.tts.say("Please select an exploration to load from the list")
+        self.logger.info("available explo: " + str(list))
+
         pass
 
     def onInput_onStop(self):
