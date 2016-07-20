@@ -62,8 +62,9 @@ class ExplorationManager:
         self.packageUid = "exploration-manager"
         self.subscribers = {
             "Places/LoadPlaces": {"callback": self.loadPlaces},
-            "Places/Save": {"callback": self.savePlacesEvent},
-            "Places/AddPlace": {"callback": self.addPlacePx}
+            "Places/Save": {"callback": self.savePlacesCallback},
+            "Places/AddPlace": {"callback": self.addPlaceCallback},
+            "Places/Reset": {"callback":self.resetPlacesCallback}
         }
         self.events = {"metricalMap": "ExplorationManager/MetricalMap",
                        "places": "ExplorationManager/Places"}
@@ -91,6 +92,13 @@ class ExplorationManager:
         if label in self.current_places["places"]:
             return self.current_places["places"][label]
         return None
+
+    def resetPlacesCallback(self, useless):
+        self.resetPlaces()
+
+    def resetPlaces(self):
+        self.current_places["places"] = {}
+        self.publishLabels()
 
     def loadExploration(self, name):
         explo_path = qi.path.findData(self.explorer_application_name, name + self.explo_extension, False)
@@ -134,12 +142,13 @@ class ExplorationManager:
         self.showPlaces()
         return True
 
-    def savePlacesEvent(self, useless):
+    def savePlacesCallback(self, useless):
         self.savePlaces()
         
     def savePlaces(self):
         path = qi.path.userWritableDataPath(self.application_name, self.current_places["name"] + self.places_extension)
         out_file = open(path, "wb")
+        self.logger.info("places to save: " + str(self.current_places))
         pickle.dump(self.current_places, out_file)
         out_file.close()
         self.logger.info("places saved to : " + path)
@@ -160,7 +169,7 @@ class ExplorationManager:
             result.append(basename[:len(basename) - 6])
         return result
                 
-    def addPlacePx(self, place):
+    def addPlaceCallback(self, place):
         pt = self.occMap.getPositionFromPixel(m.Point2Di(place[0][0], place[0][1]))
         label = place[1]
         self.addPlace(label, [pt.x, pt.y])
