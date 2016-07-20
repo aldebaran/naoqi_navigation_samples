@@ -493,6 +493,7 @@ class MyClass(GeneratedClass):
         self.mem.raiseEvent("Patrol/RobotPosition", [[int(pxl.x), int(pxl.y)], int(radius), [int(pxl_front.x), int(pxl_front.y)]])
 
     def startASR(self):
+        self.stopASR()
         places = self.exploManager.getPlaces()
         list = []
         for place in places:
@@ -505,7 +506,10 @@ class MyClass(GeneratedClass):
         self.mem.subscribeToEvent("WordRecognized", self.getName(), "onWordRecognized")
 
     def stopASR(self):
-        self.mem.unsubscribeToEvent("WordRecognized", self.getName())
+        try:
+            self.mem.unsubscribeToEvent("WordRecognized", self.getName())
+        except:
+            pass
 
     def onInput_onStart(self):
         if not(self.exploManager):
