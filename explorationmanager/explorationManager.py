@@ -204,7 +204,7 @@ class ExplorationManager:
         img = np.array(data, np.uint8).reshape(size, size, 1)
         img = (100 - img) * 2.5
         img = img.transpose((1, 0, 2)) # Do not transpose the channels.
-        tabletSize = 720
+        tabletSize = 736
         img = cv2.resize(img, (tabletSize, tabletSize))
         mpp = size * mpp / tabletSize
         size = tabletSize
