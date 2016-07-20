@@ -545,10 +545,15 @@ class MyClass(GeneratedClass):
 
     def onInput_onAddWayPoint(self, waypoint):
         self.logger.info(waypoint)
-        metrical_target = self.occMap.getPositionFromPixel(m.Point2Di(waypoint[0], waypoint[1]))
+        target = waypoint[0]
+        label = waypoint[1]
+        if label == "":
+            label = "target " + str(len(self.waypointsPx))
+        label = label.lower()
+        metrical_target = self.occMap.getPositionFromPixel(m.Point2Di(target[0], target[1]))
         self.logger.info("add waypoint")
-        self.waypoints.append([metrical_target.x, metrical_target.y])
-        self.waypointsPx.append(waypoint)
+        self.waypoints.append([[metrical_target.x, metrical_target.y], label])
+        self.waypointsPx.append(target)
         self.mem.raiseEvent(self.events["waypoints"], self.waypointsPx)
 
     def onInput_onStartPatrol(self):
@@ -560,8 +565,9 @@ class MyClass(GeneratedClass):
         for waypoint in self.waypoints:
             attempt = 1
             while (attempt <= max_attempts):
-                label = "my target"
-                fut = self.nav.navigateToInMap([waypoint[0], waypoint[1], 0.0], _async=True)
+                target = waypoint[0]
+                label = waypoint[1]
+                fut = self.nav.navigateToInMap([target[0], target[1], 0.0], _async=True)
                 while (fut.isRunning()):
                     self.updateRobotPosition()
                     time.sleep(0.2)
@@ -585,6 +591,7 @@ class MyClass(GeneratedClass):
 
     def onWordRecognized(self, key, value, message):
         if(len(value) > 1 and value[1] >= 0.5):
+            label = value[0].lower()
             if value[0] == "Patrol":
                 self.onInput_onStartPatrol()
                 return
@@ -594,7 +601,7 @@ class MyClass(GeneratedClass):
                 return
             px = self.occMap.getPixelFromPosition(m.Position2D(location[0], location[1]))
             self.logger.info(px)
-            self.onInput_onAddWayPoint([px.x, px.y])
+            self.onInput_onAddWayPoint([[px.x, px.y], value[0]])
 
     def onInput_onStop(self):
         self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
