@@ -23,6 +23,7 @@ angular.module('pepper-patrol', ['ngTouch'])
                 console.log("click: " + event.offsetX + " " + event.offsetY);
                 if (step == 1) {
                     memory.raiseEvent("Patrol/Relocalize", [pxlX, pxlY]);
+                    step = 2
                 } else if (step == 2) {
                     memory.raiseEvent("Patrol/AddWayPoint", [[pxlX, pxlY], ""]);
                 }
