@@ -115,6 +115,7 @@ class ExplorationManager:
             #load an existing annotated explo
             in_file = open(available_explo, "rb")
             data = pickle.load(in_file)
+            in_file.close()
             if not("name" in data) or not("places" in data):
                 self.logger.error("wrong annoted explo format")
                 return False
@@ -140,6 +141,7 @@ class ExplorationManager:
         path = qi.path.userWritableDataPath(self.application_name, self.current_places["name"] + self.places_extension)
         out_file = open(path, "wb")
         pickle.dump(self.current_places, out_file)
+        out_file.close()
         self.logger.info("places saved to : " + path)
         return path
 
