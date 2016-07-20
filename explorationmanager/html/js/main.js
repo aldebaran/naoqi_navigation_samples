@@ -52,6 +52,8 @@ angular.module('pepper-patrol', ['ngTouch'])
             var waypoint_canvas = document.getElementById("places");
             waypoint_canvas.width = size;
             waypoint_canvas.height = size;
+            document.getElementById("label_ui").style.visibility = "visible";
+            document.getElementById("places_ui").style.visibility = "visible";
         };
 
         $scope.setPlaces = function (tab) {
@@ -74,12 +76,13 @@ angular.module('pepper-patrol', ['ngTouch'])
         };
 
         $scope.listAvailableExplo = function(tab) {
-            console.log("list");
-            // TODO: clear previous list
             for (i = 0; i < tab.length; ++i) {
                 document.forms.form.exploration_list.options[document.forms.form.exploration_list.options.length] =
                     new Option(tab[i], tab[i]);
             }
+            document.getElementById("waiting_ui").style.display = "none";
+            document.getElementById("map_loading_screen").style.display = "block";
+            document.getElementById("general").style.visibility = "visible";
         }
 
         $scope.OnClickLoadExplo = function() {
