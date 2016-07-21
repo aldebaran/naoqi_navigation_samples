@@ -247,8 +247,6 @@ if __name__ == "__main__":
         future = session.waitForService(required_service)
         if future is not None:
             future.wait()
-    qi.info("test", "done")
     my_service = ExplorationManager(session)
-    qi.info("test", "registering")
     register_id = session.registerService("ExplorationManager", my_service)
     app.run()
