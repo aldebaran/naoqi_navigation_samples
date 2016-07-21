@@ -26,7 +26,9 @@
     <sentence lang="en_US">Places</sentence>
     <sentence lang="en_US">Show me the nearby places</sentence>
    </triggerSentences>
-   <loadingResponses/>
+   <loadingResponses>
+    <sentence lang="en_US">Let me show you the places panel</sentence>
+   </loadingResponses>
    <autonomous/>
    <permissions>
     <canRunOnPod/>
