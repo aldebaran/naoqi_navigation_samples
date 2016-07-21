@@ -17,18 +17,16 @@
       top:50px;
       right:50px;
     }
-    input {
-      width: 15em;  height: 4em;
+    input, button {
+      width: 10em;  height: 4em;
+      font-size:30pt;
     }
 
-    button{
-      width: 15em;  height: 4em;
-    }
   </style>
 
   <meta name="viewport" content="width=1280, user-scalable=no" />
 </head>
-<body ng-controller="map-display">
+<body ng-controller="map-display" id="body">
   <div id="wrapper">
     <canvas id="map_container" ></canvas>
     <canvas id="places_canvas" ></canvas>
@@ -36,8 +34,10 @@
   </div>
   <div id="ui">
     <div id="mode_ui" style="visibility:hidden">
-      <button ng-click="OnMapDisplay($event)">Configure Patrol</button>
-      <button ng-click="OnRelocalizeMode($event)">Relocalize the robot</button>
+      <form id="mode_form" onchange="angular.element(document.getElementById('body')).scope().OnModeChanged();">
+        <input type="radio" name="mode" value="1" id="mode_relocalize" checked> Relocalize the robot<br>
+        <input type="radio" name="mode" value="2" id="mode_configure"> Configure Patrol<br>
+      </form>
     </div>
     <div id="waypoints_ui" style="visibility:hidden">
       <button ng-click="OnGoClick($event)">Patrol</button>

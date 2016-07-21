@@ -23,12 +23,17 @@ angular.module('pepper-patrol', ['ngTouch'])
                 console.log("click: " + event.offsetX + " " + event.offsetY);
                 if (step == 1) {
                     memory.raiseEvent("Patrol/Relocalize", [pxlX, pxlY]);
-                    step = 2
+                    document.getElementById("mode_configure").click();
                 } else if (step == 2) {
                     memory.raiseEvent("Patrol/AddWayPoint", [[pxlX, pxlY], ""]);
                 }
             }
         };
+
+        $scope.OnModeChanged = function() {
+            step = document.querySelector('input[name="mode"]:checked').value
+            console.log("onchanged: " + step.toString());
+        }
 
         $scope.OnGoClick = function (event) {
             console.log("go");
@@ -120,14 +125,6 @@ angular.module('pepper-patrol', ['ngTouch'])
             }
         };
 
-        $scope.OnMapDisplay = function() {
-            step = 2;
-        }
-
-        $scope.OnRelocalizeMode = function() {
-            step = 1;
-        }
-
         $scope.OnExit = function() {
             memory.raiseEvent("Patrol/Exit", [])
         }
@@ -144,7 +141,6 @@ angular.module('pepper-patrol', ['ngTouch'])
         };
 
         var onDisconnected = function () {
-            console.log("Bye bye");
         };
 
         RobotUtils.connect(onConnected, onDisconnected);
