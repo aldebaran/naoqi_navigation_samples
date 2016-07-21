@@ -33,6 +33,7 @@
     <canvas id="waypoints_canvas" ng-click="addOnClick($event)"></canvas>
   </div>
   <div id="ui">
+    <div id="waiting_ui">Retrieving the map. Please wait.</div>
     <div id="mode_ui" style="visibility:hidden">
       <form id="mode_form" onchange="angular.element(document.getElementById('body')).scope().OnModeChanged();">
         <input type="radio" name="mode" value="1" id="mode_relocalize" checked> Relocalize the robot<br>

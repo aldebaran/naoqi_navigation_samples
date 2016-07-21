@@ -46,7 +46,6 @@ angular.module('pepper-patrol', ['ngTouch'])
         }
 
         $scope.setMap = function (tab) {
-            console.log("setMap");
             var mpp = tab[0];
             var size = tab[1];
             var offset = tab[2];
@@ -67,6 +66,7 @@ angular.module('pepper-patrol', ['ngTouch'])
             places_canvas.width = size;
             places_canvas.height = size;
             step = 1;
+            document.getElementById("waiting_ui").style.display = "none";
             document.getElementById("mode_ui").style.visibility = "visible";
             document.getElementById("waypoints_ui").style.visibility = "visible";
         };
@@ -106,6 +106,7 @@ angular.module('pepper-patrol', ['ngTouch'])
                 context.fillStyle = "#00ff00";
                 context.fillText(label.toString(), centerX + 10, centerY);
             }
+
         };
         $scope.setWaypoints = function (tab) {
             var canvas = document.getElementById('waypoints_canvas');
