@@ -458,7 +458,12 @@ class MyClass(GeneratedClass):
         self.nav = self.session.service("ALNavigation")
         self.tts = self.session.service("ALAnimatedSpeech")
         self.asr = self.session.service("ALSpeechRecognition")
-        self.exploManager = self.session.service("ExplorationManager")
+        try:
+            self.exploManager = self.session.service("ExplorationManager")
+        except:
+            self.tts.say("Please install application Places to run Patrol")
+            self.onInput_onStop()
+            return
         self.BIND_PYTHON(self.getName(), "onWordRecognized")
         self.events = {"metricalMap": "Patrol/MetricalMap",
                        "exploList": "Patrol/AvailableExplo",
