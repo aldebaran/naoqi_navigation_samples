@@ -55,7 +55,14 @@
    <triggerSentences>
     <sentence lang="en_US">Patrol Panel</sentence>
     <sentence lang="en_US">Pepper Patrol</sentence>
+    <sentence lang="en_US-x-scrald">Patrol Panel</sentence>
+    <sentence lang="en_US-x-scrald">Pepper Patrol</sentence>
    </triggerSentences>
+   <loadingResponses>
+    <sentence lang="en_US">Let me show you the patrol panel</sentence>
+    <sentence lang="en_US-x-scrald">Let me show you the patrol panel</sentence>
+   </loadingResponses>
+   <autonomous/>
    <permissions/>
   </behaviorContent>
  </contents>
