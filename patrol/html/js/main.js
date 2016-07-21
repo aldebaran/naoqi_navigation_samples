@@ -4,6 +4,7 @@ angular.module('pepper-patrol', ['ngTouch'])
     .controller('map-display', function ($scope, $locale, $timeout, $http) {
         console.log("map-display controller");
         var memory = null;
+        var exploManager = null;
         var intervalID = null;
         var mpp = null;
         var size = null;
@@ -138,10 +139,17 @@ angular.module('pepper-patrol', ['ngTouch'])
                 memory = service;
             }, function (error) {
             });
+            session.service("ExplorationManager").then(function (service) {
+                exploManager = service;
+                exploManager.publishMap()
+                exploManager.publishLabels()
+            }, function (error) {
+            });
             RobotUtils.subscribeToALMemoryEvent("ExplorationManager/MetricalMap", $scope.setMap);
             RobotUtils.subscribeToALMemoryEvent("Patrol/RobotPosition", $scope.setRobot);
             RobotUtils.subscribeToALMemoryEvent("ExplorationManager/Places", $scope.setPlaces);
             RobotUtils.subscribeToALMemoryEvent("Patrol/Waypoints", $scope.setWaypoints);
+
         };
 
         var onDisconnected = function () {

@@ -523,8 +523,6 @@ class MyClass(GeneratedClass):
         self.occMap = m.OccupancyMapParams(occMap[0], occMap[1], m.Position2D())
         self.occMap.originOffset = m.Position2D(occMap[2][0], occMap[2][1])
         self.logger.info(self.occMap)
-        self.exploManager.publishMap()
-        self.exploManager.publishLabels()
         if self.exploManager.isLocalized():
             self.onLocalized()
         else:
