@@ -35,10 +35,6 @@ class MyClass(GeneratedClass):
         self.mem = self.session().service("ALMemory")
         self.tts = self.session().service("ALAnimatedSpeech")
         self.life = self.session().service("ALAutonomousLife")
-        self.life.setSafeguardEnabled("RobotMoved", False)
-        self.life.setSafeguardEnabled("RobotPushed", False)
-        self.ba = self.session().service("ALBasicAwareness")
-        self.ba.stopAwareness()
         self.events = {"exploList": "Places/AvailableExplo",
                         "exit": "Places/Exit"}
         self.declareEvents()
@@ -48,6 +44,10 @@ class MyClass(GeneratedClass):
             self.mem.declareEvent(self.events[k])
 
     def onLoad(self):
+        self.life.setSafeguardEnabled("RobotMoved", False)
+        self.life.setSafeguardEnabled("RobotPushed", False)
+        self.ba = self.session().service("ALBasicAwareness")
+        self.ba.stopAwareness()
         pass
 
     def onUnload(self):
