@@ -15,21 +15,17 @@
     #ui {
       position:absolute;
       top:50px;
-      right:50px;
+      right:10px;
     }
-
-    input {
-      width: 15em;  height: 4em;
-    }
-
-    button{
-      width: 15em;  height: 4em;
+    input, button {
+      width: 6em;  height: 4em;
+	  font-size:24pt;
     }
   </style>
 
   <meta name="viewport" content="width=1280, user-scalable=no" />
 </head>
-<body ng-controller="map-display">
+<body ng-controller="map-display" id="body">
   <div id="wrapper">
     <canvas id="map_container" ></canvas>
     <canvas id="places" ng-click="addOnClick($event)"></canvas>
@@ -46,15 +42,15 @@
         </p>
       </form>
     </div>
-    <div id="places_ui" style="visibility:hidden">
-      <button ng-click="OnResetClick($event)">Reset</button>
-      <button ng-click="OnSave($event)">Save</button>
-    </div>
     <div id="label_ui" style="visibility:hidden">
       <form>
         <input id="label_field_id" type="text" name="label_field">
         <input type="submit" value="Add" ng-click="OnClickAddLabel()"/>
       </form>
+    </div>
+    <div id="places_ui" style="visibility:hidden">
+      <button ng-click="OnResetClick($event)">Reset</button>
+      <button ng-click="OnSave($event)">Save</button>
     </div>
     <div id="general" style="visibility:hidden">
       <button ng-click="OnExit($event)">Exit</button>
