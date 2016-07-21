@@ -4,6 +4,7 @@ angular.module('pepper-patrol', ['ngTouch'])
     .controller('map-display', function ($scope, $locale, $timeout, $http) {
         console.log("map-display controller");
         var memory = null;
+        var exploManager = null;
         var intervalID = null;
         var mpp = null;
         var size = null;
@@ -104,6 +105,17 @@ angular.module('pepper-patrol', ['ngTouch'])
             session.service("ALMemory").then(function (service) {
                 memory = service;
             }, function (error) {
+            });
+            session.service("ExplorationManager").then(function (service) {
+                exploManager = service;
+                exploManager.getAvailableExplorations().then(function (list) {
+                    console.log(list);
+                    $scope.listAvailableExplo(list);
+                }, function (error) {
+                    console.log("getAvailableExplorations error: " + error.toString());
+                });
+            }, function (error) {
+                console.log("Unable to get ExplorationManager " + error.toString());
             });
             RobotUtils.subscribeToALMemoryEvent("ExplorationManager/MetricalMap", $scope.setMap);
             RobotUtils.subscribeToALMemoryEvent("ExplorationManager/Places", $scope.setPlaces);

@@ -64,7 +64,6 @@ class MyClass(GeneratedClass):
             self.tts.say("I have never been here, please use explore app before.")
             self.onStopped()
             return
-        self.mem.raiseEvent(self.events["exploList"], list)
         if self.exploManager.isExplorationLoaded():
             self.exploManager.showPlaces()
             self.tts.say("You can add new places to the map by clicking on it. Don't forget to save them")
