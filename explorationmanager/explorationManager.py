@@ -86,9 +86,15 @@ class ExplorationManager:
             return False
 
     def getPlaces(self):
+        if self.current_places == None:
+            self.logger.warning("No places loaded")
+            return None
         return self.current_places["places"]
 
     def getPlaceLocation(self, label):
+        if self.current_places == None:
+            self.logger.warning("No places loaded")
+            return None
         if label in self.current_places["places"]:
             return self.current_places["places"][label]
         return None
@@ -146,6 +152,9 @@ class ExplorationManager:
         self.savePlaces()
         
     def savePlaces(self):
+        if self.current_places == None:
+            self.logger.warning("No places loaded")
+            return None
         path = qi.path.userWritableDataPath(self.application_name, self.current_places["name"] + self.places_extension)
         out_file = open(path, "wb")
         self.logger.info("places to save: " + str(self.current_places))
@@ -175,6 +184,9 @@ class ExplorationManager:
         self.addPlace(label, [pt.x, pt.y])
         
     def addPlace(self, label, position):
+        if self.current_places == None:
+            self.logger.warning("No places loaded")
+            return None
         self.logger.info("adding " + label)
         self.current_places["places"][label] = position
         self.publishLabels()
@@ -191,6 +203,9 @@ class ExplorationManager:
             return False
             
     def publishLabels(self):
+        if self.current_places == None:
+            self.logger.warning("No places loaded")
+            return None
         place_list = []
         for place in self.current_places["places"]:
             current_place = self.current_places["places"][place]
@@ -203,6 +218,9 @@ class ExplorationManager:
         self.publishLabels()
         
     def publishMap(self):
+        if self.current_places == None:
+            self.logger.warning("No places loaded")
+            return None
         # Get the map from navigation.
         map = self.nav.getMetricalMap()
         mpp = map[0]
