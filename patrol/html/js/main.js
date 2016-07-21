@@ -119,8 +119,12 @@ angular.module('pepper-patrol', ['ngTouch'])
                 var label = i.toString();
                 context.lineTo(centerX, centerY);
                 context.stroke();
-                context.font = "30px Arial";
+                var radius = 5;
+                context.beginPath();
+                context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
                 context.fillStyle = "red";
+                context.fill();
+                context.font = "30px Arial";
                 context.fillText(label, centerX + 10, centerY);
             }
         };
