@@ -15,40 +15,6 @@
   <language>en_US</language>
  </descriptionLanguages>
  <contents>
-  <behaviorContent path="patrol_display">
-   <nature>interactive</nature>
-   <names>
-    <name lang="en_US">Patrol display</name>
-   </names>
-   <permissions/>
-  </behaviorContent>
-  <behaviorContent path="all">
-   <nature>interactive</nature>
-   <names>
-    <name lang="en_US">Patrol launcher</name>
-   </names>
-   <triggerSentences>
-    <sentence lang="en_US-x-scrald">Pepper explore</sentence>
-    <sentence lang="en_US-x-scrald">Let's explore</sentence>
-    <sentence lang="en_US-x-scrald">explore</sentence>
-    <sentence lang="en_US-x-scrald">Do an exploration</sentence>
-    <sentence lang="en_US-x-scrald">Pepper Patrol</sentence>
-    <sentence lang="en_US-x-scrald">show me the patrol</sentence>
-    <sentence lang="en_US-x-scrald">Patrol</sentence>
-    <sentence lang="en_US-x-scrald">Do an Patrol</sentence>
-   </triggerSentences>
-   <loadingResponses>
-    <sentence lang="en_US">OK, let's patrol</sentence>
-    <sentence lang="en_US">OK, let's go!</sentence>
-    <sentence lang="en_US">Here I go!</sentence>
-    <sentence lang="en_US-x-scrald">OK, let's explore!</sentence>
-    <sentence lang="en_US-x-scrald">OK, let's go!</sentence>
-    <sentence lang="en_US-x-scrald">Here I go!</sentence>
-    <sentence lang="en_US-x-scrald">OK, I start exploring!</sentence>
-    <sentence lang="en_US-x-scrald">OK, let's patrol</sentence>
-   </loadingResponses>
-   <permissions/>
-  </behaviorContent>
   <behaviorContent path="patrol_panel">
    <userRequestable/>
    <nature>interactive</nature>
