@@ -29,7 +29,6 @@
    <loadingResponses>
     <sentence lang="en_US">Let me show you the places panel</sentence>
    </loadingResponses>
-   <autonomous/>
    <permissions>
     <canRunOnPod/>
    </permissions>
