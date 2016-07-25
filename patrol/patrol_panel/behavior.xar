@@ -570,9 +570,12 @@ class MyClass(GeneratedClass):
                 while (fut.isRunning()):
                     self.updateRobotPosition()
                     time.sleep(0.2)
-                if fut.value() != 3:
+                if fut.value() == 4:
                     self.tts.say("oops, there is an obstacle")
                     attempt += 1
+                elif fut.value() == 6:
+                    self.tts.say("This target is too far for me, I will skip it")
+                    break
                 else:
                     break
             if attempt > max_attempts:
