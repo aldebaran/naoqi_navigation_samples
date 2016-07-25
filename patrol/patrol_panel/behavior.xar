@@ -381,7 +381,7 @@ class MyClass(GeneratedClass):
                                 <BehaviorLayer name="behavior_layer1">
                                     <BehaviorKeyframe name="keyframe1" index="1">
                                         <Diagram>
-                                            <Box name="Show App" id="2" localization="8" tooltip="Loads the application on the tablet, if it exists, and displays the webview.&#x0A;&#x0A;V1.0.0&#x0A;" x="466" y="28">
+                                            <Box name="Show App" id="2" localization="8" tooltip="Loads the application on the tablet, if it exists, and displays the webview.&#x0A;&#x0A;V1.0.0&#x0A;" x="342" y="48">
                                                 <bitmap>media/images/box/root.png</bitmap>
                                                 <script language="4">
                                                     <content>
@@ -437,7 +437,7 @@ class MyClass(GeneratedClass):
                                                 <Output name="onSuccess" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished successfully." id="3" />
                                                 <Output name="onFailure" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished unsuccessfully." id="4" />
                                             </Box>
-                                            <Box name="Patrol panel" id="3" localization="8" tooltip="" x="889" y="377">
+                                            <Box name="Patrol panel" id="3" localization="8" tooltip="" x="617" y="357">
                                                 <bitmap>media/images/box/box-python-script.png</bitmap>
                                                 <script language="4">
                                                     <content>
@@ -457,7 +457,7 @@ class MyClass(GeneratedClass):
         self.mem = self.session.service("ALMemory")
         self.nav = self.session.service("ALNavigation")
         self.tts = self.session.service("ALAnimatedSpeech")
-        self.asr = self.session.service("ALSpeechRecognition")
+        self.dialog = self.session.service("ALDialog")
         try:
             self.exploManager = self.session.service("ExplorationManager")
         except:
@@ -472,7 +472,7 @@ class MyClass(GeneratedClass):
                        "startpatrol": "Patrol/StartPatrol",
                        "reset": "Patrol/Reset",
                        "relocalize": "Patrol/Relocalize",
-                       "exit": "Patrol/Exit"}
+                       "exit": "Patrol/Exit",}
         self.waypoints = []
         self.waypointsPx = []
 
@@ -485,7 +485,7 @@ class MyClass(GeneratedClass):
         pass
 
     def onUnload(self):
-        self.stopASR()
+        self.onStopDialog()
         self.nav.stopLocalization()
         pass
 
@@ -497,24 +497,17 @@ class MyClass(GeneratedClass):
         radius = 0.2 / self.occMap.metersPerPixel
         self.mem.raiseEvent("Patrol/RobotPosition", [[int(pxl.x), int(pxl.y)], int(radius), [int(pxl_front.x), int(pxl_front.y)]])
 
-    def startASR(self):
-        self.stopASR()
+    def startDialog(self):
+        self.setDialogConcept()
+        self.onStartDialog()
+
+    def setDialogConcept(self):
         places = self.exploManager.getPlaces()
         list = []
         for place in places:
             list.append(place)
         list.append("Patrol")
-        try:
-            self.asr.setVocabulary(list, False)
-        except:
-            pass
-        self.mem.subscribeToEvent("WordRecognized", self.getName(), "onWordRecognized")
-
-    def stopASR(self):
-        try:
-            self.mem.unsubscribeToEvent("WordRecognized", self.getName())
-        except:
-            pass
+        self.dialog.setConcept("patrol/waypointlist", "enu", list)
 
     def onInput_onStart(self):
         if not(self.exploManager):
@@ -522,7 +515,6 @@ class MyClass(GeneratedClass):
         occMap = self.exploManager.getOccupancyMapParams()
         self.occMap = m.OccupancyMapParams(occMap[0], occMap[1], m.Position2D())
         self.occMap.originOffset = m.Position2D(occMap[2][0], occMap[2][1])
-        self.logger.info(self.occMap)
         if self.exploManager.isLocalized():
             self.onLocalized()
         else:
@@ -546,7 +538,7 @@ class MyClass(GeneratedClass):
             self.nav.startLocalization()
             self.updateRobotPosition()
             self.tts.say("Click the button to configure Patrol. You can also use vocal targets")
-            self.startASR()
+            self.startDialog()
         except Exception as e:
             self.logger.info(str(e))
 
@@ -564,7 +556,7 @@ class MyClass(GeneratedClass):
         self.mem.raiseEvent(self.events["waypoints"], self.waypointsPx)
 
     def onInput_onStartPatrol(self):
-        self.stopASR()
+        self.onStopDialog()
         time.sleep(1)
         self.tts.say("Let's patrol")
         target = self.waypoints
@@ -589,26 +581,25 @@ class MyClass(GeneratedClass):
                 self.tts.say("I have reached " + str(label))
             time.sleep(0.5)
         self.tts.say("My patrol is done")
-        self.startASR()
+        self.startDialog()
 
     def onInput_onReset(self):
         self.waypoints = []
         self.waypointsPx = []
         self.mem.raiseEvent(self.events["waypoints"], self.waypointsPx)
 
-    def onWordRecognized(self, key, value, message):
-        if(len(value) > 1 and value[1] >= 0.5):
-            label = value[0].lower()
-            if value[0] == "Patrol":
-                self.onInput_onStartPatrol()
-                return
-            location = self.exploManager.getPlaceLocation(value[0])
-            self.logger.info(location)
-            if location == None:
-                return
-            px = self.occMap.getPixelFromPosition(m.Position2D(location[0], location[1]))
-            self.logger.info(px)
-            self.onInput_onAddWayPoint([[px.x, px.y], value[0]])
+    def onInput_onWordRecognized(self, word):
+        label = word.lower()
+        if label == "patrol":
+            self.onInput_onStartPatrol()
+            return
+        location = self.exploManager.getPlaceLocation(label)
+        self.logger.info(location)
+        if location == None:
+            return
+        px = self.occMap.getPixelFromPosition(m.Position2D(location[0], location[1]))
+        self.logger.info(px)
+        self.onInput_onAddWayPoint([[px.x, px.y], label])
 
     def onInput_onStop(self):
         self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
@@ -622,7 +613,24 @@ class MyClass(GeneratedClass):
                                                 <Input name="onStartPatrol" type="1" type_size="1" nature="1" inner="0" tooltip="" id="5" />
                                                 <Input name="onReset" type="1" type_size="1" nature="1" inner="0" tooltip="" id="6" />
                                                 <Input name="onRelocalize" type="0" type_size="1" nature="1" inner="0" tooltip="" id="7" />
-                                                <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="8" />
+                                                <Input name="onWordRecognized" type="3" type_size="1" nature="1" inner="0" tooltip="" id="8" />
+                                                <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="9" />
+                                                <Output name="onStartDialog" type="1" type_size="1" nature="2" inner="0" tooltip="" id="10" />
+                                                <Output name="onStopDialog" type="1" type_size="1" nature="2" inner="0" tooltip="" id="11" />
+                                            </Box>
+                                            <Box name="patrol" id="1" localization="8" tooltip="" x="824" y="579">
+                                                <dialogFile>../patrol/patrol.dlg</dialogFile>
+                                                <bitmap>media/images/box/box-dialog.png</bitmap>
+                                                <script language="4">
+                                                    <content>
+                                                        <![CDATA[]]>
+</content>
+                                                </script>
+                                                <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+                                                <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+                                                <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+                                                <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+                                                <Output name="recognized" type="3" type_size="1" nature="2" inner="0" tooltip="" id="5" />
                                             </Box>
                                             <Link inputowner="3" indexofinput="2" outputowner="2" indexofoutput="3" />
                                             <Link inputowner="3" indexofinput="3" outputowner="2" indexofoutput="4" />
@@ -632,7 +640,10 @@ class MyClass(GeneratedClass):
                                             <Link inputowner="3" indexofinput="7" outputowner="0" indexofoutput="5" />
                                             <Link inputowner="3" indexofinput="3" outputowner="0" indexofoutput="6" />
                                             <Link inputowner="2" indexofinput="2" outputowner="0" indexofoutput="7" />
-                                            <Link inputowner="0" indexofinput="8" outputowner="3" indexofoutput="8" />
+                                            <Link inputowner="0" indexofinput="8" outputowner="3" indexofoutput="9" />
+                                            <Link inputowner="1" indexofinput="2" outputowner="3" indexofoutput="10" />
+                                            <Link inputowner="1" indexofinput="3" outputowner="3" indexofoutput="11" />
+                                            <Link inputowner="3" indexofinput="8" outputowner="1" indexofoutput="5" />
                                         </Diagram>
                                     </BehaviorKeyframe>
                                 </BehaviorLayer>

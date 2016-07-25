@@ -31,6 +31,9 @@
    <autonomous/>
    <permissions/>
   </behaviorContent>
+  <dialogContent topicName="patrol" typeVersion="1.0">
+   <topic language="en_US" path="patrol/patrol_enu.top"/>
+  </dialogContent>
  </contents>
  <requirements>
   <naoqiRequirement minVersion="2.5"/>

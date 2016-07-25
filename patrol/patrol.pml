@@ -4,7 +4,9 @@
     <BehaviorDescriptions>
         <BehaviorDescription name="behavior" src="patrol_panel" xar="behavior.xar" />
     </BehaviorDescriptions>
-    <Dialogs />
+    <Dialogs>
+        <Dialog name="patrol" src="patrol/patrol.dlg" />
+    </Dialogs>
     <Resources>
         <File name="index" src="html/index.html" />
         <File name="jquery-1.11.0.min" src="html/js/jquery-1.11.0.min.js" />
@@ -24,7 +26,9 @@
         <File name="spinningwheel-min" src="html/js/spinningwheel-min.js" />
         <File name="spinningwheel" src="html/js/spinningwheel.js" />
     </Resources>
-    <Topics />
+    <Topics>
+        <Topic name="patrol_enu" src="patrol/patrol_enu.top" topicName="patrol" language="en_US" />
+    </Topics>
     <IgnoredPaths />
     <Translations auto-fill="en_US">
         <Translation name="translation_en_US" src="translations/translation_en_US.ts" language="en_US" />
