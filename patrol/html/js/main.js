@@ -139,6 +139,13 @@ angular.module('pepper-patrol', ['ngTouch'])
             memory.raiseEvent("Patrol/StopPatrol", [])
         }
 
+        $scope.OnInfinitePatrolChanged = function() {
+            var checkbox = document.querySelector('input[name="infinite_patrol"]:checked');
+            var infinite_patrol = checkbox != null && checkbox.checked;
+            console.log("raising patrolChanged: " + infinite_patrol.toString());
+            memory.raiseEvent("Patrol/OnInfinitePatrolChanged", infinite_patrol);
+        }
+
         $scope.onPatrolStarted = function() {
             document.getElementById("patrol_ongoing_ui").style.display = "block";
             document.getElementById("waypoints_ui").style.visibility = "hidden";

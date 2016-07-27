@@ -16,7 +16,8 @@
         <Input name="Patrol/Relocalize" type="0" type_size="1" nature="4" stm_value_name="Patrol/Relocalize" inner="1" tooltip="Patrol/Relocalize desc" id="7" />
         <Input name="Patrol/Exit" type="0" type_size="1" nature="4" stm_value_name="Patrol/Exit" inner="1" tooltip="Patrol/Exit desc" id="8" />
         <Input name="Patrol/StopPatrol" type="0" type_size="1" nature="4" stm_value_name="Patrol/StopPatrol" inner="1" tooltip="Patrol/StopPatrol desc" id="9" />
-        <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="10" />
+        <Input name="Patrol/OnInfinitePatrolChanged" type="0" type_size="1" nature="4" stm_value_name="Patrol/OnInfinitePatrolChanged" inner="1" tooltip="Patrol/OnInfinitePatrolChanged desc" id="10" />
+        <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="11" />
         <Timeline enable="0">
             <BehaviorLayer name="behavior_layer1">
                 <BehaviorKeyframe name="keyframe1" index="1">
@@ -377,8 +378,9 @@ class MyClass(GeneratedClass):
                             <Input name="Patrol panel_onRelocalize" type="0" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="5" />
                             <Input name="Patrol panel_onStop" type="1" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="6" />
                             <Input name="Show App_onStart" type="1" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="7" />
-                            <Input name="onStopPatrol" type="1" type_size="1" nature="1" inner="0" tooltip="" id="8" />
-                            <Output name="Patrolpanel_onStopped" type="1" type_size="1" nature="2" inner="0" tooltip="This output has been automatically generated&#x0A;by converting several boxes into a single box." id="9" />
+                            <Input name="onStopPatrol" type="1" type_size="1" nature="2" inner="0" tooltip="" id="8" />
+                            <Input name="onInfinitePatrol" type="0" type_size="1" nature="2" inner="0" tooltip="" id="9" />
+                            <Output name="Patrolpanel_onStopped" type="1" type_size="1" nature="2" inner="0" tooltip="This output has been automatically generated&#x0A;by converting several boxes into a single box." id="10" />
                             <Timeline enable="0">
                                 <BehaviorLayer name="behavior_layer1">
                                     <BehaviorKeyframe name="keyframe1" index="1">
@@ -457,6 +459,7 @@ class MyClass(GeneratedClass):
         self.tts = self.session.service("ALAnimatedSpeech")
         self.dialog = self.session.service("ALDialog")
         self.stopPatrol = False
+        self.infinitePatrol = False
         try:
             self.exploManager = self.session.service("ExplorationManager")
         except:
@@ -473,7 +476,8 @@ class MyClass(GeneratedClass):
                        "exit": "Patrol/Exit",
                        "stoppatrol": "Patrol/StopPatrol",
                        "patrolStarted": "Patrol/PatrolStarted",
-                       "patrolFinished": "Patrol/PatrolFinished"}
+                       "patrolFinished": "Patrol/PatrolFinished",
+                       "infinitePatrol": "Patrol/OnInfinitePatrolChanged"}
         self.waypoints = []
         self.waypointsPx = []
 
@@ -564,33 +568,36 @@ class MyClass(GeneratedClass):
         self.tts.say("Let's patrol")
         target = self.waypoints
         max_attempts = 5
-        for waypoint in self.waypoints:
-            attempt = 1
-            while (attempt <= max_attempts):
+        loop = True
+        while loop:
+            for waypoint in self.waypoints:
+                attempt = 1
+                while (attempt <= max_attempts):
+                    if self.stopPatrol:
+                        break
+                    target = waypoint[0]
+                    label = waypoint[1]
+                    fut = self.nav.navigateToInMap([target[0], target[1], 0.0],     _async=True)
+                    while (fut.isRunning()):
+                        self.updateRobotPosition()
+                        time.sleep(0.2)
+                    if fut.value() == 4:
+                        self.tts.say("oops, there is an obstacle")
+                        attempt += 1
+                    elif fut.value() == 6:
+                        self.tts.say("This target is too far for me, I will skip it")
+                        break
+                    else:
+                        break
                 if self.stopPatrol:
+                    self.tts.say("I will stop here")
                     break
-                target = waypoint[0]
-                label = waypoint[1]
-                fut = self.nav.navigateToInMap([target[0], target[1], 0.0], _async=True)
-                while (fut.isRunning()):
-                    self.updateRobotPosition()
-                    time.sleep(0.2)
-                if fut.value() == 4:
-                    self.tts.say("oops, there is an obstacle")
-                    attempt += 1
-                elif fut.value() == 6:
-                    self.tts.say("This target is too far for me, I will skip it")
-                    break
+                if attempt > max_attempts:
+                    self.tts.say("I cannot reach this point, let's skip it")
                 else:
-                    break
-            if self.stopPatrol:
-                self.tts.say("I will stop here")
-                break
-            if attempt > max_attempts:
-                self.tts.say("I cannot reach this point, let's skip it")
-            else:
-                self.tts.say("I have reached " + str(label))
-            time.sleep(0.5)
+                    self.tts.say("I have reached " + str(label))
+                time.sleep(0.5)
+            loop = not(self.stopPatrol) and self.infinitePatrol
         self.mem.raiseEvent(self.events["patrolFinished"], [])
         self.tts.say("My patrol is done")
         self.startDialog()
@@ -617,6 +624,10 @@ class MyClass(GeneratedClass):
         self.stopPatrol = True
         self.nav.stopNavigateTo()
 
+    def onInput_onInfinitePatrolChanged(self, infinite_patrol):
+        self.logger.info("set infinite patrol: " + str(infinite_patrol))
+        self.infinitePatrol = infinite_patrol
+
     def onInput_onStop(self):
         self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
         self.onStopped() #activate the output of the box]]>
@@ -631,9 +642,10 @@ class MyClass(GeneratedClass):
                                                 <Input name="onRelocalize" type="0" type_size="1" nature="1" inner="0" tooltip="" id="7" />
                                                 <Input name="onWordRecognized" type="3" type_size="1" nature="1" inner="0" tooltip="" id="8" />
                                                 <Input name="onStopPatrol" type="1" type_size="1" nature="1" inner="0" tooltip="" id="9" />
-                                                <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="10" />
-                                                <Output name="onStartDialog" type="1" type_size="1" nature="2" inner="0" tooltip="" id="11" />
-                                                <Output name="onStopDialog" type="1" type_size="1" nature="2" inner="0" tooltip="" id="12" />
+                                                <Input name="onInfinitePatrolChanged" type="0" type_size="1" nature="1" inner="0" tooltip="" id="10" />
+                                                <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="11" />
+                                                <Output name="onStartDialog" type="1" type_size="1" nature="2" inner="0" tooltip="" id="12" />
+                                                <Output name="onStopDialog" type="1" type_size="1" nature="2" inner="0" tooltip="" id="13" />
                                             </Box>
                                             <Box name="patrol" id="1" localization="8" tooltip="" x="824" y="579">
                                                 <dialogFile>../patrol/patrol.dlg</dialogFile>
@@ -657,11 +669,12 @@ class MyClass(GeneratedClass):
                                             <Link inputowner="3" indexofinput="7" outputowner="0" indexofoutput="5" />
                                             <Link inputowner="3" indexofinput="3" outputowner="0" indexofoutput="6" />
                                             <Link inputowner="2" indexofinput="2" outputowner="0" indexofoutput="7" />
-                                            <Link inputowner="0" indexofinput="9" outputowner="3" indexofoutput="10" />
-                                            <Link inputowner="1" indexofinput="2" outputowner="3" indexofoutput="11" />
-                                            <Link inputowner="1" indexofinput="3" outputowner="3" indexofoutput="12" />
+                                            <Link inputowner="0" indexofinput="10" outputowner="3" indexofoutput="11" />
+                                            <Link inputowner="1" indexofinput="2" outputowner="3" indexofoutput="12" />
+                                            <Link inputowner="1" indexofinput="3" outputowner="3" indexofoutput="13" />
                                             <Link inputowner="3" indexofinput="8" outputowner="1" indexofoutput="5" />
                                             <Link inputowner="3" indexofinput="9" outputowner="0" indexofoutput="8" />
+                                            <Link inputowner="3" indexofinput="10" outputowner="0" indexofoutput="9" />
                                         </Diagram>
                                     </BehaviorKeyframe>
                                 </BehaviorLayer>
@@ -671,14 +684,15 @@ class MyClass(GeneratedClass):
                         <Link inputowner="4" indexofinput="3" outputowner="0" indexofoutput="5" />
                         <Link inputowner="4" indexofinput="4" outputowner="0" indexofoutput="6" />
                         <Link inputowner="4" indexofinput="5" outputowner="0" indexofoutput="7" />
-                        <Link inputowner="0" indexofinput="10" outputowner="4" indexofoutput="9" />
+                        <Link inputowner="0" indexofinput="11" outputowner="4" indexofoutput="10" />
                         <Link inputowner="4" indexofinput="6" outputowner="0" indexofoutput="8" />
                         <Link inputowner="4" indexofinput="7" outputowner="1" indexofoutput="5" />
                         <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
-                        <Link inputowner="0" indexofinput="10" outputowner="6" indexofoutput="3" />
+                        <Link inputowner="0" indexofinput="11" outputowner="6" indexofoutput="3" />
                         <Link inputowner="6" indexofinput="2" outputowner="1" indexofoutput="6" />
                         <Link inputowner="1" indexofinput="2" outputowner="6" indexofoutput="4" />
                         <Link inputowner="4" indexofinput="8" outputowner="0" indexofoutput="9" />
+                        <Link inputowner="4" indexofinput="9" outputowner="0" indexofoutput="10" />
                     </Diagram>
                 </BehaviorKeyframe>
             </BehaviorLayer>

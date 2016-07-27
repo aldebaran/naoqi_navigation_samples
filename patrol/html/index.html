@@ -44,6 +44,9 @@
     <div id="waypoints_ui" style="visibility:hidden">
       <button ng-click="OnGoClick($event)">Patrol</button>
       <button ng-click="OnResetClick($event)">Reset</button>
+      <form id="patrol_settings" onchange="angular.element(document.getElementById('body')).scope().OnInfinitePatrolChanged();">
+        <input type="checkbox" name="infinite_patrol" id="infinite_patrol" unchecked> Infinite Patrol<br>
+      </form>
     </div>
     <div id="general">
       <button id="exit_button" ng-click="OnExit($event)">Exit</button>
