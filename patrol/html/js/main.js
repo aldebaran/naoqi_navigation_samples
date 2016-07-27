@@ -81,11 +81,11 @@ angular.module('pepper-patrol', ['ngTouch'])
             context.clearRect(0, 0, canvas.width, canvas.height);
             context.beginPath();
             context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-            context.fillStyle="#ff0000";
+            context.fillStyle="blue";
             context.fill();
             context.beginPath();
             context.arc(tab[2][0], tab[2][1], 0.5 * radius, 0, 2 * Math.PI, false);
-            context.fillStyle="#ff0000";
+            context.fillStyle="blue";
             context.fill();
         };
 
