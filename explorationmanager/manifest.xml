@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package uuid="exploration-manager" version="0.0.1">
+<package uuid="exploration-manager" version="0.0.2">
  <names>
   <name lang="en_US">Places</name>
   <name lang="en_US-x-scrald">Places</name>
@@ -20,14 +20,19 @@
    <nature>interactive</nature>
    <names>
     <name lang="en_US">display_places</name>
+    <name lang="en_US-x-scrald">display_places</name>
    </names>
    <triggerSentences>
     <sentence lang="en_US">Show me the places</sentence>
     <sentence lang="en_US">Places</sentence>
     <sentence lang="en_US">Show me the nearby places</sentence>
+    <sentence lang="en_US-x-scrald">Show me the places</sentence>
+    <sentence lang="en_US-x-scrald">Places</sentence>
+    <sentence lang="en_US-x-scrald">Show me the nearby places</sentence>
    </triggerSentences>
    <loadingResponses>
     <sentence lang="en_US">Let me show you the places panel</sentence>
+    <sentence lang="en_US-x-scrald">Let me show you the places panel</sentence>
    </loadingResponses>
    <permissions>
     <canRunOnPod/>
