@@ -34,6 +34,7 @@
   </div>
   <div id="ui">
     <div id="waiting_ui">Retrieving the map. Please wait.</div>
+    <div id="patrol_ongoing_ui" style="display:none">Patrol ongoing.</div>
     <div id="mode_ui" style="visibility:hidden">
       <form id="mode_form" onchange="angular.element(document.getElementById('body')).scope().OnModeChanged();">
         <input type="radio" name="mode" value="1" id="mode_relocalize" checked> Relocalize the robot<br>
@@ -45,7 +46,8 @@
       <button ng-click="OnResetClick($event)">Reset</button>
     </div>
     <div id="general">
-      <button ng-click="OnExit($event)">Exit</button>
+      <button id="exit_button" ng-click="OnExit($event)">Exit</button>
+      <button id="stop_button" ng-click="OnStop($event)" style="display:none">Stop</button>
     </div>
   </div>
 

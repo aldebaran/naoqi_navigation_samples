@@ -135,6 +135,26 @@ angular.module('pepper-patrol', ['ngTouch'])
             memory.raiseEvent("Patrol/Exit", [])
         }
 
+        $scope.OnStop = function() {
+            memory.raiseEvent("Patrol/StopPatrol", [])
+        }
+
+        $scope.onPatrolStarted = function() {
+            document.getElementById("patrol_ongoing_ui").style.display = "block";
+            document.getElementById("waypoints_ui").style.visibility = "hidden";
+            document.getElementById("mode_ui").style.visibility = "hidden";
+            document.getElementById("exit_button").style.display = "none";
+            document.getElementById("stop_button").style.display = "block";
+        }
+
+        $scope.onPatrolFinished = function() {
+            document.getElementById("patrol_ongoing_ui").style.display = "none";
+            document.getElementById("waypoints_ui").style.visibility = "visible";
+            document.getElementById("mode_ui").style.visibility = "visible";
+            document.getElementById("exit_button").style.display = "block";
+            document.getElementById("stop_button").style.display = "none";
+        }
+
         var onConnected = function (session) {
             session.service("ALMemory").then(function (service) {
                 memory = service;
@@ -150,6 +170,8 @@ angular.module('pepper-patrol', ['ngTouch'])
             RobotUtils.subscribeToALMemoryEvent("Patrol/RobotPosition", $scope.setRobot);
             RobotUtils.subscribeToALMemoryEvent("ExplorationManager/Places", $scope.setPlaces);
             RobotUtils.subscribeToALMemoryEvent("Patrol/Waypoints", $scope.setWaypoints);
+            RobotUtils.subscribeToALMemoryEvent("Patrol/PatrolStarted", $scope.onPatrolStarted);
+            RobotUtils.subscribeToALMemoryEvent("Patrol/PatrolFinished", $scope.onPatrolFinished);
 
         };
 
