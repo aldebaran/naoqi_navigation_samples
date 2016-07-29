@@ -119,8 +119,6 @@ angular.module('pepper-patrol', ['ngTouch'])
                 var centerX = tab[i][0];
                 var centerY = tab[i][1];
                 var label = i.toString();
-                context.lineTo(centerX, centerY);
-                context.stroke();
                 var radius = 5;
                 context.beginPath();
                 context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
