@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package uuid="exploration-manager" version="0.0.2">
+<package uuid="exploration-manager" version="0.0.3">
  <names>
   <name lang="en_US">Places</name>
   <name lang="en_US-x-scrald">Places</name>
