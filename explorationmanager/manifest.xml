@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package uuid="exploration-manager" version="0.0.3">
+<package uuid="exploration-manager" version="0.0.4">
  <names>
   <name lang="en_US">Places</name>
   <name lang="en_US-x-scrald">Places</name>
@@ -34,16 +34,17 @@
     <sentence lang="en_US">Let me show you the places panel</sentence>
     <sentence lang="en_US-x-scrald">Let me show you the places panel</sentence>
    </loadingResponses>
+   <autonomous/>
    <permissions>
     <canRunOnPod/>
    </permissions>
   </behaviorContent>
  </contents>
  <requirements>
-  <naoqiRequirement minVersion="2.5"/>
+  <naoqiRequirement minVersion="2.5.2"/>
   <robotRequirement model="JULIETTE_Y20"/>
  </requirements>
  <services>
-  <service name="explorationManager" autorun="true" execStart="python explorationManager.py"/>
+  <service execStart="python explorationManager.py" name="explorationManager" autorun="true"/>
  </services>
 </package>

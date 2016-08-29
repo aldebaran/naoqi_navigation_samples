@@ -11,6 +11,29 @@ try:
     import cPickle as pickle
 except:
     import pickle
+    
+try:
+    from almath import OccupancyMapParams
+except:
+    class Point2Di:
+        def __init__(self, x, y):
+            self.x = x
+            self.y = y
+            
+    class OccupancyMapParams:
+        def __init__(self, size, metersPerPixel, originOffest):
+            self.size = size
+            self.metersPerPixel = metersPerPixel
+            # Metric coordinates of the (0, 0) pixel.
+            self.originOffset = m.Position2D(0, 0)
+            self.originOffset.x = originOffest.x
+            self.originOffset.y = originOffest.y
+    
+        def getPositionFromPixel(self, pixel):
+            return m.Position2D(pixel.x * self.metersPerPixel + self.originOffset.x, -pixel.y * self.metersPerPixel + self.originOffset.y)
+    
+        def getPixelFromPosition(self, position):
+            return m.Position2D((position.x - self.originOffset.x) / self.metersPerPixel, (self.originOffset.y - position.y) / self.metersPerPixel)
 
 @qi.multiThreaded()
 class EventHelper:
@@ -179,7 +202,7 @@ class ExplorationManager:
         return result
                 
     def addPlaceCallback(self, place):
-        pt = self.occMap.getPositionFromPixel(m.Point2Di(place[0][0], place[0][1]))
+        pt = self.occMap.getPositionFromPixel(Point2Di(place[0][0], place[0][1]))
         label = place[1]
         self.addPlace(label, [pt.x, pt.y])
         
@@ -238,7 +261,7 @@ class ExplorationManager:
         #convert to color
         cv_img = img.astype(np.uint8)
         color_img = cv2.cvtColor(cv_img, cv.CV_GRAY2RGB)
-        self.occMap = m.OccupancyMapParams(size, mpp, originOffset)
+        self.occMap = OccupancyMapParams(size, mpp, originOffset)
         self.occMap.originOffset = originOffset
         # png
         flag, buff = cv2.imencode(".png", color_img)
