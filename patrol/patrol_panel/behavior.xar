@@ -449,6 +449,29 @@ class MyClass(GeneratedClass):
 import almath as m
 import qi
 
+try:
+    from almath import OccupancyMapParams
+except:
+    class Point2Di:
+        def __init__(self, x, y):
+            self.x = x
+            self.y = y
+
+    class OccupancyMapParams:
+        def __init__(self, size, metersPerPixel, originOffest):
+            self.size = size
+            self.metersPerPixel = metersPerPixel
+            # Metric coordinates of the (0, 0) pixel.
+            self.originOffset = m.Position2D(0, 0)
+            self.originOffset.x = originOffest.x
+            self.originOffset.y = originOffest.y
+
+        def getPositionFromPixel(self, pixel):
+            return m.Position2D(pixel.x * self.metersPerPixel + self.originOffset.x, -pixel.y * self.metersPerPixel + self.originOffset.y)
+
+        def getPixelFromPosition(self, position):
+            return m.Position2D((position.x - self.originOffset.x) / self.metersPerPixel, (self.originOffset.y - position.y) / self.metersPerPixel)
+
 class MyClass(GeneratedClass):
     def __init__(self):
         GeneratedClass.__init__(self)
@@ -518,7 +541,7 @@ class MyClass(GeneratedClass):
         if not(self.exploManager):
             return
         occMap = self.exploManager.getOccupancyMapParams()
-        self.occMap = m.OccupancyMapParams(occMap[0], occMap[1], m.Position2D())
+        self.occMap = OccupancyMapParams(occMap[0], occMap[1], m.Position2D())
         self.occMap.originOffset = m.Position2D(occMap[2][0], occMap[2][1])
         if self.exploManager.isLocalized():
             self.onLocalized()
@@ -528,7 +551,7 @@ class MyClass(GeneratedClass):
     def onInput_onRelocalize(self, target):
         self.tts.say("Please take a step back so that I can take a look")
         time.sleep(3)
-        px = m.Point2Di(target[0], target[1])
+        px = Point2Di(target[0], target[1])
         metrical_target = self.occMap.getPositionFromPixel(px)
         self.logger.info("px: " + str(px))
         self.logger.info("relocalize at: " + str(metrical_target))
@@ -554,7 +577,7 @@ class MyClass(GeneratedClass):
         if label == "":
             label = "target " + str(len(self.waypointsPx))
         label = label.lower()
-        metrical_target = self.occMap.getPositionFromPixel(m.Point2Di(target[0], target[1]))
+        metrical_target = self.occMap.getPositionFromPixel(Point2Di(target[0], target[1]))
         self.logger.info("add waypoint")
         self.waypoints.append([[metrical_target.x, metrical_target.y], label])
         self.waypointsPx.append(target)
