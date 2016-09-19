@@ -25,7 +25,7 @@ class MyClass(GeneratedClass):
         #self.onStopped() #activate the output of the box
         self.ba.setEnabled(False)
         self.nav.explore(10)
-        self.nav.topoNavigateTo(0)
+        self.nav.navigateToInMap([0, 0, 0])
         self.tts.say("I finished! Do you want to see my map?")
         self.onStopped() #activate the output of the box
 
