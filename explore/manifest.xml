@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package uuid="explore-c8782b" version="0.0.3">
+<package version="0.0.5" uuid="explore-c8782b">
  <names>
   <name lang="en_US">explore</name>
   <name lang="en_US-x-scrald">explore</name>
@@ -26,7 +26,6 @@
    <nature>interactive</nature>
    <triggerSentences/>
    <loadingResponses/>
-   <autonomous/>
    <permissions/>
   </behaviorContent>
   <behaviorContent path="all">
@@ -52,7 +51,6 @@
     <sentence lang="en_US-x-scrald">Here I go!</sentence>
     <sentence lang="en_US-x-scrald">OK, I start exploring!</sentence>
    </loadingResponses>
-   <autonomous/>
    <permissions/>
   </behaviorContent>
  </contents>
