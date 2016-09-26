@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html ng-app="pepper-patrol">
+<head>
+  <style>
+    body {
+      font-size: 24pt;
+    }
+
+    #wrapper canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #ui {
+      position:absolute;
+      top:50px;
+      right:10px;
+    }
+    input, button {
+      width: 6em;  height: 4em;
+	  font-size:24pt;
+    }
+
+  </style>
+
+  <meta name="viewport" content="width=1280, user-scalable=no" />
+</head>
+<body ng-controller="map-display" id="body">
+  <div id="wrapper">
+    <canvas id="map_container" ></canvas>
+    <canvas id="places_canvas" ></canvas>
+    <canvas id="waypoints_canvas" ng-click="addOnClick($event)"></canvas>
+  </div>
+  <div id="ui">
+    <div id="waiting_ui">Retrieving the map. Please wait.</div>
+    <div id="patrol_ongoing_ui" style="display:none">Patrol ongoing.</div>
+    <div id="mode_ui" style="visibility:hidden">
+      <form id="mode_form" onchange="angular.element(document.getElementById('body')).scope().OnModeChanged();">
+        <input type="radio" name="mode" value="1" id="mode_relocalize" checked> Relocalize the robot<br>
+        <input type="radio" name="mode" value="2" id="mode_configure"> Configure Patrol<br>
+      </form>
+    </div>
+    <div id="waypoints_ui" style="visibility:hidden">
+      <button ng-click="OnGoClick($event)">Patrol</button>
+      <button ng-click="OnResetClick($event)">Reset</button>
+      <form id="patrol_settings" onchange="angular.element(document.getElementById('body')).scope().OnInfinitePatrolChanged();">
+        <input type="checkbox" name="infinite_patrol" id="infinite_patrol" unchecked> Infinite Patrol<br>
+      </form>
+    </div>
+    <div id="general">
+      <button id="exit_button" ng-click="OnExit($event)">Exit</button>
+      <button id="stop_button" ng-click="OnStop($event)" style="display:none">Stop</button>
+    </div>
+  </div>
+
+  <!-- <script src="js/jquery-1.11.0.min.js"></script>-->
+  <script src="js/robotutils.js"></script>
+  <script src="js/angular.min.js"></script>
+  <script src="js/angular-touch.min.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+
+
+</script>
+
+</body>
+</html>

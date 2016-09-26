@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<package uuid="patrol-c8782b" version="0.0.5">
+ <names>
+  <name lang="en_US">patrol</name>
+  <name lang="en_US-x-scrald">patrol</name>
+  <name lang="fr_FR">Patrouille</name>
+  <name lang="fr_FR-x-scrald">Patrouille</name>
+ </names>
+ <descriptions>
+  <description lang="en_US">The robot can patrol inside the explored area.</description>
+  <description lang="en_US-x-scrald">The robot can patrol inside the explored area.</description>
+  <description lang="fr_FR">Le robot peut patrouiller dans la zone explorée.</description>
+  <description lang="fr_FR-x-scrald">Le robot peut patrouiller dans la zone explorée.</description>
+ </descriptions>
+ <supportedLanguages>
+  <language>en_US</language>
+  <language>fr_FR</language>
+ </supportedLanguages>
+ <descriptionLanguages>
+  <language>en_US</language>
+  <language>fr_FR</language>
+ </descriptionLanguages>
+ <contents>
+  <behaviorContent path="patrol_panel">
+   <userRequestable/>
+   <nature>interactive</nature>
+   <triggerSentences>
+    <sentence lang="en_US">Patrol Panel</sentence>
+    <sentence lang="en_US">Pepper Patrol</sentence>
+    <sentence lang="en_US-x-scrald">Patrol Panel</sentence>
+    <sentence lang="en_US-x-scrald">Pepper Patrol</sentence>
+    <sentence lang="fr_FR">Patrouille</sentence>
+    <sentence lang="fr_FR">Montre moi l'écran de patrouille</sentence>
+    <sentence lang="fr_FR-x-scrald">Patrouille</sentence>
+    <sentence lang="fr_FR-x-scrald">Montre moi l'écran de patrouille</sentence>
+   </triggerSentences>
+   <loadingResponses>
+    <sentence lang="en_US">Let me show you the patrol panel</sentence>
+    <sentence lang="en_US-x-scrald">Let me show you the patrol panel</sentence>
+    <sentence lang="fr_FR">C'est parti pour la patrouille</sentence>
+    <sentence lang="fr_FR-x-scrald">C'est parti pour la patrouille</sentence>
+   </loadingResponses>
+   <autonomous/>
+   <permissions/>
+  </behaviorContent>
+  <dialogContent topicName="patrol" typeVersion="1.0">
+   <topic path="patrol/patrol_enu.top" language="en_US"/>
+  </dialogContent>
+ </contents>
+ <requirements>
+  <naoqiRequirement minVersion="2.5.2"/>
+  <robotRequirement model="JULIETTE_Y20"/>
+ </requirements>
+</package>
