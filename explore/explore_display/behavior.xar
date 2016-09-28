@@ -203,7 +203,7 @@ class MyClass(GeneratedClass):
         pass
 
     def onInput_onStart(self):
-        self.tts.say("OK I show the map.")
+        self.tts.say("I show the map.")
         self.onStopped() #activate the output of the box
         pass
 

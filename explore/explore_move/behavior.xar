@@ -49,7 +49,8 @@ class MyClass(GeneratedClass):
         self.nav.startLocalization()
         self.nav.navigateToInMap([0, 0, 0])
         self.nav.stopLocalization()
-        self.tts.say("I finished! Do you want to see my map?")
+        self.nav.saveExploration()
+        self.tts.say("I finished and saved this exploration.")
         self.onStopped() #activate the output of the box
 
     def onInput_onStop(self):
