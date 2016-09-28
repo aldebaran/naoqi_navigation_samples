@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    html,body{ margin:0; height:100%; overflow:hidden; } img{ min-height:100%; min-width:100%; height:auto; width:auto; position:absolute; top:-100%; bottom:-100%; left:-100%; right:-100%; margin:auto; }
+  </style>
+  <!-- needed to scale tablet display -->
+  <meta name="viewport"
+      content="initial-scale = 1,
+      minimum-scale = 1,
+      maximum-scale = 1"/>
+</head>
+<body>
+
+  <div id="map_container"></div>
+
+  <script src="js/jquery-1.11.0.min.js"></script>
+    <script src="js/robotutils.js"></script>
+
+  <!-- application script call -->
+  <script type="text/javascript">
+
+    function setMap(map_b64) {
+      console.log("setMap");
+      $('#map_container').html("<img src='"+map_b64+"'></img>");
+    }
+
+    $(document).ready(function(e) {
+      console.log("READY");
+      evt_displayMap = RobotUtils.subscribeToALMemoryEvent("Navigation/displayMap", setMap);
+    });
+
+  </script>
+
+</body>
+</html>
