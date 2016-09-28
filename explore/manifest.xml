@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<package uuid="explore-c8782b" version="0.0.6">
+ <names>
+  <name lang="en_US">explore</name>
+  <name lang="en_US-x-scrald">explore</name>
+ </names>
+ <descriptions>
+  <description lang="en_US">The robot explores its environement and makes a map.</description>
+  <description lang="en_US-x-scrald">The robot explores its environement and makes a map.</description>
+ </descriptions>
+ <supportedLanguages>
+  <language>en_US</language>
+ </supportedLanguages>
+ <descriptionLanguages>
+  <language>en_US</language>
+ </descriptionLanguages>
+ <contents>
+  <behaviorContent path="explore_display">
+   <nature>interactive</nature>
+   <triggerSentences/>
+   <loadingResponses/>
+   <autonomous/>
+   <permissions/>
+  </behaviorContent>
+  <behaviorContent path="explore_move">
+   <nature>interactive</nature>
+   <triggerSentences/>
+   <loadingResponses/>
+   <autonomous/>
+   <permissions/>
+  </behaviorContent>
+  <behaviorContent path="all">
+   <userRequestable/>
+   <nature>interactive</nature>
+   <triggerSentences>
+    <sentence lang="en_US">Pepper explore</sentence>
+    <sentence lang="en_US">Let's explore</sentence>
+    <sentence lang="en_US">explore</sentence>
+    <sentence lang="en_US">Do an exploration</sentence>
+    <sentence lang="en_US-x-scrald">Pepper explore</sentence>
+    <sentence lang="en_US-x-scrald">Let's explore</sentence>
+    <sentence lang="en_US-x-scrald">explore</sentence>
+    <sentence lang="en_US-x-scrald">Do an exploration</sentence>
+   </triggerSentences>
+   <loadingResponses>
+    <sentence lang="en_US">OK, let's explore!</sentence>
+    <sentence lang="en_US">OK, let's go!</sentence>
+    <sentence lang="en_US">Here I go!</sentence>
+    <sentence lang="en_US">OK, I start exploring!</sentence>
+    <sentence lang="en_US-x-scrald">OK, let's explore!</sentence>
+    <sentence lang="en_US-x-scrald">OK, let's go!</sentence>
+    <sentence lang="en_US-x-scrald">Here I go!</sentence>
+    <sentence lang="en_US-x-scrald">OK, I start exploring!</sentence>
+   </loadingResponses>
+   <permissions/>
+  </behaviorContent>
+ </contents>
+ <requirements>
+  <naoqiRequirement minVersion="2.5"/>
+  <robotRequirement model="JULIETTE_Y20"/>
+ </requirements>
+</package>
