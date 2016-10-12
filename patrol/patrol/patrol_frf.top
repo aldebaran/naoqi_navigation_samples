@@ -1,0 +1,5 @@
+topic: ~patrol()
+language: frf
+dynamic:patrol/waypointlist
+
+u:(_~patrol/waypointlist)  $recognized = $1

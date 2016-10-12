@@ -40,11 +40,11 @@
     <sentence lang="fr_FR">C'est parti pour la patrouille</sentence>
     <sentence lang="fr_FR-x-scrald">C'est parti pour la patrouille</sentence>
    </loadingResponses>
-   <autonomous/>
    <permissions/>
   </behaviorContent>
   <dialogContent topicName="patrol" typeVersion="1.0">
-   <topic path="patrol/patrol_enu.top" language="en_US"/>
+   <topic language="en_US" path="patrol/patrol_enu.top"/>
+   <topic language="fr_FR" path="patrol/patrol_frf.top"/>
   </dialogContent>
  </contents>
  <requirements>

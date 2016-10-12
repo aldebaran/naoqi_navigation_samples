@@ -25,12 +25,11 @@
         <File name="robotutils.min" src="html/js/robotutils.min.js" />
         <File name="spinningwheel-min" src="html/js/spinningwheel-min.js" />
         <File name="spinningwheel" src="html/js/spinningwheel.js" />
+        <File name="README" src="README.md" />
     </Resources>
     <Topics>
         <Topic name="patrol_enu" src="patrol/patrol_enu.top" topicName="patrol" language="en_US" />
+        <Topic name="patrol_frf" src="patrol/patrol_frf.top" topicName="patrol" language="fr_FR" />
     </Topics>
     <IgnoredPaths />
-    <Translations auto-fill="en_US">
-        <Translation name="translation_en_US" src="translations/translation_en_US.ts" language="en_US" />
-    </Translations>
 </Package>
