@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package uuid="patrol-c8782b" version="0.0.5">
+<package uuid="patrol-c8782b" version="0.0.6">
  <names>
   <name lang="en_US">patrol</name>
   <name lang="en_US-x-scrald">patrol</name>
@@ -40,6 +40,7 @@
     <sentence lang="fr_FR">C'est parti pour la patrouille</sentence>
     <sentence lang="fr_FR-x-scrald">C'est parti pour la patrouille</sentence>
    </loadingResponses>
+   <autonomous/>
    <permissions/>
   </behaviorContent>
   <dialogContent topicName="patrol" typeVersion="1.0">
