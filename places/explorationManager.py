@@ -2,7 +2,6 @@ import qi
 import os
 import time
 import cv2
-import cv
 import numpy as np
 import almath as m
 import base64
@@ -14,6 +13,7 @@ except:
     
 try:
     from almath import OccupancyMapParams
+    from almath import Point2Di
 except:
     class Point2Di:
         def __init__(self, x, y):
@@ -260,7 +260,7 @@ class ExplorationManager:
         size = tabletSize
         #convert to color
         cv_img = img.astype(np.uint8)
-        color_img = cv2.cvtColor(cv_img, cv.CV_GRAY2RGB)
+        color_img = cv2.cvtColor(cv_img, cv2.COLOR_GRAY2RGB)
         self.occMap = OccupancyMapParams(size, mpp, originOffset)
         self.occMap.originOffset = originOffset
         # png
