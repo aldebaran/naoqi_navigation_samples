@@ -451,6 +451,7 @@ import qi
 
 try:
     from almath import OccupancyMapParams
+    from almath import Point2Di
 except:
     class Point2Di:
         def __init__(self, x, y):
@@ -564,7 +565,11 @@ class MyClass(GeneratedClass):
             self.nav.relocalizeInMap([metrical_target.x, metrical_target.y, 0.0])
             self.onLocalized()
         except Exception as e:
-            self.logger.info(str(e))
+            try:
+                self.nav.relocalizeInMap()
+                self.onLocalized()
+            except Exception as e:
+                self.logger.info(str(e))
 
     def onLocalized(self):
         try:
@@ -610,7 +615,7 @@ class MyClass(GeneratedClass):
                         self.updateRobotPosition()
                         time.sleep(0.2)
                     returnValue = fut.value()
-                    if self.useErrorCodes and returnValue == 4 or not(self.useErrorCodes) and returnValue == 1:
+                    if self.useErrorCodes and returnValue == 4 or not(self.useErrorCodes) and returnValue == 0:
                         self.tts.say("oops, there is an obstacle")
                         attempt += 1
                     elif self.useErrorCodes and fut.value() == 6:
