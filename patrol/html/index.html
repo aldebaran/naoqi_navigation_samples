@@ -18,7 +18,7 @@
       right:10px;
     }
     input, button {
-      width: 6em;  height: 4em;
+      width: 5em;  height: 3em;
 	  font-size:24pt;
     }
 
@@ -31,11 +31,14 @@
     <canvas id="map_container" ></canvas>
     <canvas id="places_canvas" ></canvas>
     <canvas id="waypoints_canvas" ng-click="addOnClick($event)"></canvas>
+    <canvas id="image_container" ></canvas>   
+    <canvas id="" ng-click="nextOnClick($event)"></canvas>  
   </div>
   <div id="ui">
     <div id="waiting_ui">Retrieving the map. Please wait.</div>
     <div id="patrol_ongoing_ui" style="display:none">Patrol ongoing.</div>
-    <div id="mode_ui" style="visibility:hidden">
+    <div id="patrol_report" style="display:none">Patrol report.</div>
+    <div id="mode_ui" style="visibility:hidden"> 
       <form id="mode_form" onchange="angular.element(document.getElementById('body')).scope().OnModeChanged();">
         <input type="radio" name="mode" value="1" id="mode_relocalize" checked> Relocalize the robot<br>
         <input type="radio" name="mode" value="2" id="mode_configure"> Configure Patrol<br>
@@ -46,6 +49,9 @@
       <button ng-click="OnResetClick($event)">Reset</button>
       <form id="patrol_settings" onchange="angular.element(document.getElementById('body')).scope().OnInfinitePatrolChanged();">
         <input type="checkbox" name="infinite_patrol" id="infinite_patrol" unchecked> Infinite Patrol<br>
+      </form>
+      <form id="report_settings" onchange="angular.element(document.getElementById('body')).scope().isReport();">
+        <input type="checkbox" name="patrol_report" id="patrol_report" unchecked> Patrol Report<br>
       </form>
     </div>
     <div id="general">

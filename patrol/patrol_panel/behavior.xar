@@ -1,32 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<ChoregrapheProject xmlns="http://www.aldebaran-robotics.com/schema/choregraphe/project.xsd" xar_version="3">
-    <Box name="root" id="-1" localization="8" tooltip="Root box of Choregraphe&apos;s behavior. Highest level possible." x="0" y="0">
-        <bitmap>media/images/box/root.png</bitmap>
-        <script language="4">
-            <content>
-                <![CDATA[]]>
-</content>
-        </script>
-        <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-        <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
-        <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-        <Input name="Patrol/AddWayPoint" type="0" type_size="1" nature="4" stm_value_name="Patrol/AddWayPoint" inner="1" tooltip="Patrol/AddWayPoint desc" id="4" />
-        <Input name="Patrol/StartPatrol" type="0" type_size="1" nature="4" stm_value_name="Patrol/StartPatrol" inner="1" tooltip="Patrol/StartPatrol desc" id="5" />
-        <Input name="Patrol/Reset" type="0" type_size="1" nature="4" stm_value_name="Patrol/Reset" inner="1" tooltip="Patrol/Reset desc" id="6" />
-        <Input name="Patrol/Relocalize" type="0" type_size="1" nature="4" stm_value_name="Patrol/Relocalize" inner="1" tooltip="Patrol/Relocalize desc" id="7" />
-        <Input name="Patrol/Exit" type="0" type_size="1" nature="4" stm_value_name="Patrol/Exit" inner="1" tooltip="Patrol/Exit desc" id="8" />
-        <Input name="Patrol/StopPatrol" type="0" type_size="1" nature="4" stm_value_name="Patrol/StopPatrol" inner="1" tooltip="Patrol/StopPatrol desc" id="9" />
-        <Input name="Patrol/OnInfinitePatrolChanged" type="0" type_size="1" nature="4" stm_value_name="Patrol/OnInfinitePatrolChanged" inner="1" tooltip="Patrol/OnInfinitePatrolChanged desc" id="10" />
-        <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="11" />
-        <Timeline enable="0">
-            <BehaviorLayer name="behavior_layer1">
-                <BehaviorKeyframe name="keyframe1" index="1">
-                    <Diagram>
-                        <Box name="isExploLoaded" id="1" localization="8" tooltip="" x="291" y="290">
-                            <bitmap>media/images/box/box-python-script.png</bitmap>
-                            <script language="4">
-                                <content>
-                                    <![CDATA[class MyClass(GeneratedClass):
+<?xml version="1.0" encoding="UTF-8" ?><ChoregrapheProject xmlns="http://www.aldebaran-robotics.com/schema/choregraphe/project.xsd" xar_version="3"><Box name="root" id="-1" localization="8" tooltip="Root box of Choregraphe&apos;s behavior. Highest level possible." x="0" y="0"><bitmap>media/images/box/root.png</bitmap><script language="4"><content><![CDATA[]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Input name="Patrol/AddWayPoint" type="0" type_size="1" nature="4" stm_value_name="Patrol/AddWayPoint" inner="1" tooltip="Patrol/AddWayPoint desc" id="4" /><Input name="Patrol/StartPatrol" type="0" type_size="1" nature="4" stm_value_name="Patrol/StartPatrol" inner="1" tooltip="Patrol/StartPatrol desc" id="5" /><Input name="Patrol/Reset" type="0" type_size="1" nature="4" stm_value_name="Patrol/Reset" inner="1" tooltip="Patrol/Reset desc" id="6" /><Input name="Patrol/Relocalize" type="0" type_size="1" nature="4" stm_value_name="Patrol/Relocalize" inner="1" tooltip="Patrol/Relocalize desc" id="7" /><Input name="Patrol/Exit" type="0" type_size="1" nature="4" stm_value_name="Patrol/Exit" inner="1" tooltip="Patrol/Exit desc" id="8" /><Input name="Patrol/StopPatrol" type="0" type_size="1" nature="4" stm_value_name="Patrol/StopPatrol" inner="1" tooltip="Patrol/StopPatrol desc" id="9" /><Input name="Patrol/OnInfinitePatrolChanged" type="0" type_size="1" nature="4" stm_value_name="Patrol/OnInfinitePatrolChanged" inner="1" tooltip="Patrol/OnInfinitePatrolChanged desc" id="10" /><Input name="Patrol/IsReport" type="0" type_size="1" nature="4" stm_value_name="Patrol/IsReport" inner="1" tooltip="Patrol/IsReport desc" id="11" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="12" /><Timeline enable="0"><BehaviorLayer name="behavior_layer1"><BehaviorKeyframe name="keyframe1" index="1"><Diagram><Box name="isExploLoaded" id="1" localization="8" tooltip="" x="291" y="290"><bitmap>media/images/box/box-python-script.png</bitmap><script language="4"><content><![CDATA[class MyClass(GeneratedClass):
     def __init__(self):
         GeneratedClass.__init__(self)
 
@@ -52,36 +24,7 @@
 
     def onInput_onStop(self):
         self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
-        self.onStopped() #activate the output of the box]]>
-</content>
-                            </script>
-                            <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-                            <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
-                            <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-                            <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
-                            <Output name="onExploLoaded" type="1" type_size="1" nature="2" inner="0" tooltip="" id="5" />
-                            <Output name="onExploNotLoaded" type="1" type_size="1" nature="2" inner="0" tooltip="" id="6" />
-                        </Box>
-                        <Box name="Show Places behavior" id="6" localization="8" tooltip="Enter description here" x="283" y="453">
-                            <bitmap>media/images/box/box-diagram.png</bitmap>
-                            <script language="4">
-                                <content>
-                                    <![CDATA[]]>
-</content>
-                            </script>
-                            <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-                            <Input name="display_onStart" type="1" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="2" />
-                            <Output name="RunBehavior_onError" type="3" type_size="1" nature="2" inner="0" tooltip="This output has been automatically generated&#x0A;by converting several boxes into a single box." id="3" />
-                            <Output name="RunBehavior_onStopped" type="1" type_size="1" nature="2" inner="0" tooltip="This output has been automatically generated&#x0A;by converting several boxes into a single box." id="4" />
-                            <Timeline enable="0">
-                                <BehaviorLayer name="behavior_layer1">
-                                    <BehaviorKeyframe name="keyframe1" index="1">
-                                        <Diagram>
-                                            <Box name="Run Behavior" id="4" localization="0" tooltip="Manage a behavior.&#x0A;&#x0A;Will start the behavior given as input when onStart is stimulated.&#x0A;&#x0A;Will stop it when onStop is stimulated.&#x0A;&#x0A;Will exit on onStopped when no error happened during behavior startup or stopping.&#x0A;&#x0A;Will exit on onError if an error happened, transmitting a string describing the error.&#x0A;&#x0A;Most notably (but not exclusively), the box will fail if you try to start a behavior not present on the robot, or if you try to start a behavior that&apos;s already started.&#x0A;" x="671" y="146">
-                                                <bitmap>media/images/box/box-diagram.png</bitmap>
-                                                <script language="4">
-                                                    <content>
-                                                        <![CDATA[class MyClass(GeneratedClass):
+        self.onStopped() #activate the output of the box]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /><Output name="onExploLoaded" type="1" type_size="1" nature="2" inner="0" tooltip="" id="5" /><Output name="onExploNotLoaded" type="1" type_size="1" nature="2" inner="0" tooltip="" id="6" /></Box><Box name="Show Places behavior" id="6" localization="8" tooltip="Enter description here" x="283" y="453"><bitmap>media/images/box/box-diagram.png</bitmap><script language="4"><content><![CDATA[]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="display_onStart" type="1" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="2" /><Output name="RunBehavior_onError" type="3" type_size="1" nature="2" inner="0" tooltip="This output has been automatically generated&#x0A;by converting several boxes into a single box." id="3" /><Output name="RunBehavior_onStopped" type="1" type_size="1" nature="2" inner="0" tooltip="This output has been automatically generated&#x0A;by converting several boxes into a single box." id="4" /><Timeline enable="0"><BehaviorLayer name="behavior_layer1"><BehaviorKeyframe name="keyframe1" index="1"><Diagram><Box name="Run Behavior" id="4" localization="0" tooltip="Manage a behavior.&#x0A;&#x0A;Will start the behavior given as input when onStart is stimulated.&#x0A;&#x0A;Will stop it when onStop is stimulated.&#x0A;&#x0A;Will exit on onStopped when no error happened during behavior startup or stopping.&#x0A;&#x0A;Will exit on onError if an error happened, transmitting a string describing the error.&#x0A;&#x0A;Most notably (but not exclusively), the box will fail if you try to start a behavior not present on the robot, or if you try to start a behavior that&apos;s already started.&#x0A;" x="671" y="146"><bitmap>media/images/box/box-diagram.png</bitmap><script language="4"><content><![CDATA[class MyClass(GeneratedClass):
     def __init__(self):
         GeneratedClass.__init__(self)
 
@@ -105,42 +48,13 @@
             self.onStopped()
 
     def onInput_onStop(self):
-        self.onUnload()]]>
-</content>
-                                                </script>
-                                                <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-                                                <Input name="onStart" type="3" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
-                                                <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-                                                <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
-                                                <Output name="onError" type="3" type_size="1" nature="1" inner="0" tooltip="" id="5" />
-                                            </Box>
-                                            <Box name="display" id="5" localization="8" tooltip="Send the text you entered when the input is stimulated." plugin="textedit_plugin" x="412" y="157">
-                                                <bitmap>media/images/box/interaction/vocabulary.png</bitmap>
-                                                <script language="4">
-                                                    <content>
-                                                        <![CDATA[# /!\ Generated content. Do not edit!
+        self.onUnload()]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="3" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /><Output name="onError" type="3" type_size="1" nature="1" inner="0" tooltip="" id="5" /></Box><Box name="display" id="5" localization="8" tooltip="Send the text you entered when the input is stimulated." plugin="textedit_plugin" x="412" y="157"><bitmap>media/images/box/interaction/vocabulary.png</bitmap><script language="4"><content><![CDATA[# /!\ Generated content. Do not edit!
 class MyClass(GeneratedClass):
 	def __init__(self):
 		GeneratedClass.__init__(self)
 
 	def onInput_onStart(self):
-		self.onStopped("exploration-manager/display_places")]]>
-</content>
-                                                </script>
-                                                <pluginContent>
-                                                    <text>
-                                                        <![CDATA[exploration-manager/display_places]]>
-</text>
-                                                </pluginContent>
-                                                <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" />
-                                                <Input name="onStart" type="1" type_size="1" nature="1" inner="0" tooltip="To send the text on the output." id="2" />
-                                                <Output name="onStopped" type="3" type_size="1" nature="2" inner="0" tooltip="The text you entered." id="3" />
-                                            </Box>
-                                            <Box name="Animated Say" id="1" localization="8" tooltip="Say some text with animations. Note that you must open the box to enter the text." x="145" y="98">
-                                                <bitmap>media/images/box/interaction/say.png</bitmap>
-                                                <script language="4">
-                                                    <content>
-                                                        <![CDATA[class MyClass(GeneratedClass):
+		self.onStopped("exploration-manager/display_places")]]></content></script><pluginContent><text><![CDATA[exploration-manager/display_places]]></text></pluginContent><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="1" inner="0" tooltip="To send the text on the output." id="2" /><Output name="onStopped" type="3" type_size="1" nature="2" inner="0" tooltip="The text you entered." id="3" /></Box><Box name="Animated Say" id="1" localization="8" tooltip="Say some text with animations. Note that you must open the box to enter the text." x="145" y="98"><bitmap>media/images/box/interaction/say.png</bitmap><script language="4"><content><![CDATA[class MyClass(GeneratedClass):
     def __init__(self):
         GeneratedClass.__init__(self, False)
 
@@ -156,29 +70,7 @@ class MyClass(GeneratedClass):
     def onInput_onStop(self):
         if( self.bIsRunning ):
             self.onUnload()
-            self.onStopped()]]>
-</content>
-                                                </script>
-                                                <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" />
-                                                <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this Input." id="2" />
-                                                <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this Input." id="3" />
-                                                <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished or stopped." id="4" />
-                                                <Parameter name="Voice shaping (%)" inherits_from_parent="0" content_type="1" value="100" default_value="100" min="50" max="150" tooltip='Used to modify at runtime the voice feature (tone, speed). In a slighty&#x0A;different way than pitch and speed, it gives a kind of &quot;gender or age&#x0A;modification&quot; effect.&#x0A;&#x0A;For instance, a quite good male derivation of female voice can be&#x0A;obtained setting this parameter to 78%.&#x0A;&#x0A;Note: For a better effect, you can compensate this parameter with the&#x0A;speed parameter. For example, if you want to decrease by 20% the voice&#x0A;shaping, you will have to increase by 20% the speed to keep a constant&#x0A;average speed.&#x0A;&#x0A;!Warning! This feature is not available yet in Japanese, Chinese and Korean.' id="5" />
-                                                <Parameter name="Speed (%)" inherits_from_parent="0" content_type="1" value="100" default_value="100" min="50" max="200" tooltip="Changes the speed of the voice.&#x0A;&#x0A;Note: For a better effect, you can compensate this parameter with the voice&#x0A;shaping parameter. For example, if you want to increase by 20% the speed, you&#x0A;will have to decrease by 20% the voice shaping to keep a constant average&#x0A;speed.&#x0A;&#x0A;!Warning! This feature is not available yet in Japanese, Chinese and Korean." id="6" />
-                                                <Parameter name="Speaking movement mode" inherits_from_parent="0" content_type="3" value="contextual" default_value="contextual" custom_choice="0" tooltip="Change the body language mode during the speech.&#x0A;disabled: The robot will only play the animations given by the user. ex: ^start(...) or ^tag(...)&#x0A;random: During time the robot has no animation to play, he will launch random neutral animations.&#x0A;contextual: During time the robot has no animation to play, he will try to launch a new one accordingly to the saying text. Every time the robot can&apos;t find a contextual animation he will launch a random neutral animation." id="7">
-                                                    <Choice value="disabled" />
-                                                    <Choice value="random" />
-                                                    <Choice value="contextual" />
-                                                </Parameter>
-                                                <Timeline enable="0">
-                                                    <BehaviorLayer name="behavior_layer1">
-                                                        <BehaviorKeyframe name="keyframe1" index="1">
-                                                            <Diagram>
-                                                                <Box name="Animated Say Text" id="2" localization="8" tooltip="Say the text received on its input and move during its speech." x="422" y="65">
-                                                                    <bitmap>media/images/box/interaction/say.png</bitmap>
-                                                                    <script language="4">
-                                                                        <content>
-                                                                            <![CDATA[import time
+            self.onStopped()]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this Input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this Input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished or stopped." id="4" /><Parameter name="Voice shaping (%)" inherits_from_parent="0" content_type="1" value="100" default_value="100" min="50" max="150" tooltip='Used to modify at runtime the voice feature (tone, speed). In a slighty&#x0A;different way than pitch and speed, it gives a kind of &quot;gender or age&#x0A;modification&quot; effect.&#x0A;&#x0A;For instance, a quite good male derivation of female voice can be&#x0A;obtained setting this parameter to 78%.&#x0A;&#x0A;Note: For a better effect, you can compensate this parameter with the&#x0A;speed parameter. For example, if you want to decrease by 20% the voice&#x0A;shaping, you will have to increase by 20% the speed to keep a constant&#x0A;average speed.&#x0A;&#x0A;!Warning! This feature is not available yet in Japanese, Chinese and Korean.' id="5" /><Parameter name="Speed (%)" inherits_from_parent="0" content_type="1" value="100" default_value="100" min="50" max="200" tooltip="Changes the speed of the voice.&#x0A;&#x0A;Note: For a better effect, you can compensate this parameter with the voice&#x0A;shaping parameter. For example, if you want to increase by 20% the speed, you&#x0A;will have to decrease by 20% the voice shaping to keep a constant average&#x0A;speed.&#x0A;&#x0A;!Warning! This feature is not available yet in Japanese, Chinese and Korean." id="6" /><Parameter name="Speaking movement mode" inherits_from_parent="0" content_type="3" value="contextual" default_value="contextual" custom_choice="0" tooltip="Change the body language mode during the speech.&#x0A;disabled: The robot will only play the animations given by the user. ex: ^start(...) or ^tag(...)&#x0A;random: During time the robot has no animation to play, he will launch random neutral animations.&#x0A;contextual: During time the robot has no animation to play, he will try to launch a new one accordingly to the saying text. Every time the robot can&apos;t find a contextual animation he will launch a random neutral animation." id="7"><Choice value="disabled" /><Choice value="random" /><Choice value="contextual" /></Parameter><Timeline enable="0"><BehaviorLayer name="behavior_layer1"><BehaviorKeyframe name="keyframe1" index="1"><Diagram><Box name="Animated Say Text" id="2" localization="8" tooltip="Say the text received on its input and move during its speech." x="422" y="65"><bitmap>media/images/box/interaction/say.png</bitmap><script language="4"><content><![CDATA[import time
 
 class MyClass(GeneratedClass):
     def __init__(self):
@@ -218,26 +110,7 @@ class MyClass(GeneratedClass):
                 self.bIsRunning = False
 
     def onInput_onStop(self):
-        self.onUnload()]]>
-</content>
-                                                                    </script>
-                                                                    <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" />
-                                                                    <Input name="onStart" type="3" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this Input." id="2" />
-                                                                    <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this Input." id="3" />
-                                                                    <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when Box behavior is finished." id="4" />
-                                                                    <Parameter name="Voice shaping (%)" inherits_from_parent="1" content_type="1" value="100" default_value="100" min="50" max="150" tooltip='Used to modify at runtime the voice feature (tone, speed). In a slighty&#x0A;different way than pitch and speed, it gives a kind of &quot;gender or age&#x0A;modification&quot; effect.&#x0A;&#x0A;For instance, a quite good male derivation of female voice can be&#x0A;obtained setting this parameter to 78%.&#x0A;&#x0A;Note: For a better effect, you can compensate this parameter with the&#x0A;speed parameter. For example, if you want to decrease by 20% the voice&#x0A;shaping, you will have to increase by 20% the speed to keep a constant&#x0A;average speed.' id="5" />
-                                                                    <Parameter name="Speed (%)" inherits_from_parent="1" content_type="1" value="100" default_value="100" min="50" max="200" tooltip="Changes the speed of the voice.&#x0A;&#x0A;Note: For a better effect, you can compensate this parameter with the voice&#x0A;shaping parameter. For example, if you want to increase by 20% the speed, you&#x0A;will have to decrease by 20% the voice shaping to keep a constant average&#x0A;speed." id="6" />
-                                                                    <Parameter name="Speaking movement mode" inherits_from_parent="1" content_type="3" value="contextual" default_value="contextual" custom_choice="0" tooltip="Change the body language mode during the speech.&#x0A;disabled: The robot will only play the animations given by the user. ex: ^start(...) or ^tag(...)&#x0A;random: During time the robot has no animation to play, he will launch random neutral animations.&#x0A;contextual: During time the robot has no animation to play, he will try to launch a new one accordingly to the saying text. Every time the robot can&apos;t find a contextual animation he will launch a random neutral animation." id="7">
-                                                                        <Choice value="disabled" />
-                                                                        <Choice value="random" />
-                                                                        <Choice value="contextual" />
-                                                                    </Parameter>
-                                                                </Box>
-                                                                <Box name="Localized Text" id="5" localization="8" tooltip="Send on the output the text associated with the robot&apos;s current voice language.&#x0A;You can display and edit the text associated with any language by&#x0A;selecting the language in the combobox.&#x0A;&#x0A;!!Warning!! The text sent on the output is NOT the displayed one but the one&#x0A;associated with the robot&apos;s current voice language." plugin="localizationbox_plugin" x="114" y="68">
-                                                                    <bitmap>media/images/box/interaction/vocabulary.png</bitmap>
-                                                                    <script language="4">
-                                                                        <content>
-                                                                            <![CDATA[# /!\ Generated content. Do not edit!
+        self.onUnload()]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when Diagram is loaded." id="1" /><Input name="onStart" type="3" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this Input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this Input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when Box behavior is finished." id="4" /><Parameter name="Voice shaping (%)" inherits_from_parent="1" content_type="1" value="100" default_value="100" min="50" max="150" tooltip='Used to modify at runtime the voice feature (tone, speed). In a slighty&#x0A;different way than pitch and speed, it gives a kind of &quot;gender or age&#x0A;modification&quot; effect.&#x0A;&#x0A;For instance, a quite good male derivation of female voice can be&#x0A;obtained setting this parameter to 78%.&#x0A;&#x0A;Note: For a better effect, you can compensate this parameter with the&#x0A;speed parameter. For example, if you want to decrease by 20% the voice&#x0A;shaping, you will have to increase by 20% the speed to keep a constant&#x0A;average speed.' id="5" /><Parameter name="Speed (%)" inherits_from_parent="1" content_type="1" value="100" default_value="100" min="50" max="200" tooltip="Changes the speed of the voice.&#x0A;&#x0A;Note: For a better effect, you can compensate this parameter with the voice&#x0A;shaping parameter. For example, if you want to increase by 20% the speed, you&#x0A;will have to decrease by 20% the voice shaping to keep a constant average&#x0A;speed." id="6" /><Parameter name="Speaking movement mode" inherits_from_parent="1" content_type="3" value="contextual" default_value="contextual" custom_choice="0" tooltip="Change the body language mode during the speech.&#x0A;disabled: The robot will only play the animations given by the user. ex: ^start(...) or ^tag(...)&#x0A;random: During time the robot has no animation to play, he will launch random neutral animations.&#x0A;contextual: During time the robot has no animation to play, he will try to launch a new one accordingly to the saying text. Every time the robot can&apos;t find a contextual animation he will launch a random neutral animation." id="7"><Choice value="disabled" /><Choice value="random" /><Choice value="contextual" /></Parameter></Box><Box name="Localized Text" id="5" localization="8" tooltip="Send on the output the text associated with the robot&apos;s current voice language.&#x0A;You can display and edit the text associated with any language by&#x0A;selecting the language in the combobox.&#x0A;&#x0A;!!Warning!! The text sent on the output is NOT the displayed one but the one&#x0A;associated with the robot&apos;s current voice language." plugin="localizationbox_plugin" x="114" y="68"><bitmap>media/images/box/interaction/vocabulary.png</bitmap><script language="4"><content><![CDATA[# /!\ Generated content. Do not edit!
 class MyClass(GeneratedClass):
 	def __init__(self):
 		try: # disable autoBind
@@ -267,129 +140,13 @@ class MyClass(GeneratedClass):
 			"Russian" : " ^start(animations/Stand/Gestures/Hey_1) Привет ^wait(animations/Stand/Gestures/Hey_1) ",
 			"Swedish" : " ^start(animations/Stand/Gestures/Hey_1) Hallå ^wait(animations/Stand/Gestures/Hey_1) ",
 			"Turkish" : " ^start(animations/Stand/Gestures/Hey_1) Merhaba ^wait(animations/Stand/Gestures/Hey_1) ",
-			"Chinese" : " ^start(animations/Stand/Gestures/Hey_1) 你好 ^wait(animations/Stand/Gestures/Hey_1) "
+			"Chinese" : " ^start(animations/Stand/Gestures/Hey_1) 你好 ^wait(animations/Stand/Gestures/Hey_1) ",
+			"MandarinTaiwan" : "  "
 		}
 
 	def onInput_onStart(self):
 		sDefaultLang = self.tts.getLanguage()
-		self.onStopped(self.sentences[sDefaultLang])]]>
-</content>
-                                                                    </script>
-                                                                    <pluginContent>
-                                                                        <arabic>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) مرحبا ^wait(animations/Stand/Gestures/Hey_1)]]>
-</arabic>
-                                                                        <czech>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) Ahoj ^wait(animations/Stand/Gestures/Hey_1)]]>
-</czech>
-                                                                        <danish>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) Hej ^wait(animations/Stand/Gestures/Hey_1)]]>
-</danish>
-                                                                        <german>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) Hallo ^wait(animations/Stand/Gestures/Hey_1)]]>
-</german>
-                                                                        <greek>
-                                                                            <![CDATA[]]>
-</greek>
-                                                                        <english>
-                                                                            <![CDATA[First, please help me loading the right map. You can add remarkable places to it.]]>
-</english>
-                                                                        <spanish>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) Hola ^wait(animations/Stand/Gestures/Hey_1)]]>
-</spanish>
-                                                                        <finnish>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) Hei ^wait(animations/Stand/Gestures/Hey_1)]]>
-</finnish>
-                                                                        <french>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) Bonjour ^wait(animations/Stand/Gestures/Hey_1)]]>
-</french>
-                                                                        <italian>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) Ciao ^wait(animations/Stand/Gestures/Hey_1)]]>
-</italian>
-                                                                        <japanese>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) こんにちは ^wait(animations/Stand/Gestures/Hey_1)]]>
-</japanese>
-                                                                        <korean>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) 안녕하세요 ^wait(animations/Stand/Gestures/Hey_1)]]>
-</korean>
-                                                                        <dutch>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) Hallo ^wait(animations/Stand/Gestures/Hey_1)]]>
-</dutch>
-                                                                        <norwegian>
-                                                                            <![CDATA[]]>
-</norwegian>
-                                                                        <polish>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) Cześć ^wait(animations/Stand/Gestures/Hey_1)]]>
-</polish>
-                                                                        <brazilian>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) Olá ^wait(animations/Stand/Gestures/Hey_1)]]>
-</brazilian>
-                                                                        <portuguese>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) Olá ^wait(animations/Stand/Gestures/Hey_1)]]>
-</portuguese>
-                                                                        <russian>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) Привет ^wait(animations/Stand/Gestures/Hey_1)]]>
-</russian>
-                                                                        <swedish>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) Hallå ^wait(animations/Stand/Gestures/Hey_1)]]>
-</swedish>
-                                                                        <turkish>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) Merhaba ^wait(animations/Stand/Gestures/Hey_1)]]>
-</turkish>
-                                                                        <chinese>
-                                                                            <![CDATA[^start(animations/Stand/Gestures/Hey_1) 你好 ^wait(animations/Stand/Gestures/Hey_1)]]>
-</chinese>
-                                                                        <language>5</language>
-                                                                    </pluginContent>
-                                                                    <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-                                                                    <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Data is sent on the output when this input is stimulated." id="2" />
-                                                                    <Output name="onStopped" type="3" type_size="1" nature="1" inner="0" tooltip="Data sent when asked." id="3" />
-                                                                </Box>
-                                                                <Link inputowner="0" indexofinput="4" outputowner="2" indexofoutput="4" />
-                                                                <Link inputowner="5" indexofinput="2" outputowner="0" indexofoutput="2" />
-                                                                <Link inputowner="2" indexofinput="2" outputowner="5" indexofoutput="3" />
-                                                            </Diagram>
-                                                        </BehaviorKeyframe>
-                                                    </BehaviorLayer>
-                                                </Timeline>
-                                                <Resource name="Speech" type="Lock" timeout="0" />
-                                            </Box>
-                                            <Link inputowner="4" indexofinput="2" outputowner="5" indexofoutput="3" />
-                                            <Link inputowner="0" indexofinput="3" outputowner="4" indexofoutput="5" />
-                                            <Link inputowner="0" indexofinput="4" outputowner="4" indexofoutput="4" />
-                                            <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
-                                            <Link inputowner="5" indexofinput="2" outputowner="1" indexofoutput="4" />
-                                        </Diagram>
-                                    </BehaviorKeyframe>
-                                </BehaviorLayer>
-                            </Timeline>
-                        </Box>
-                        <Box name="Show Patrol Panel" id="4" localization="8" tooltip="Enter description here" x="598" y="50">
-                            <bitmap>media/images/box/box-diagram.png</bitmap>
-                            <script language="4">
-                                <content>
-                                    <![CDATA[]]>
-</content>
-                            </script>
-                            <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-                            <Input name="Patrol panel_onAddWayPoint" type="0" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="2" />
-                            <Input name="Patrol panel_onStartPatrol" type="1" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="3" />
-                            <Input name="Patrol panel_onReset" type="1" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="4" />
-                            <Input name="Patrol panel_onRelocalize" type="0" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="5" />
-                            <Input name="Patrol panel_onStop" type="1" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="6" />
-                            <Input name="Show App_onStart" type="1" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="7" />
-                            <Input name="onStopPatrol" type="1" type_size="1" nature="2" inner="0" tooltip="" id="8" />
-                            <Input name="onInfinitePatrol" type="0" type_size="1" nature="2" inner="0" tooltip="" id="9" />
-                            <Output name="Patrolpanel_onStopped" type="1" type_size="1" nature="2" inner="0" tooltip="This output has been automatically generated&#x0A;by converting several boxes into a single box." id="10" />
-                            <Timeline enable="0">
-                                <BehaviorLayer name="behavior_layer1">
-                                    <BehaviorKeyframe name="keyframe1" index="1">
-                                        <Diagram>
-                                            <Box name="Show App" id="2" localization="8" tooltip="Loads the application on the tablet, if it exists, and displays the webview.&#x0A;&#x0A;V1.0.0&#x0A;" x="342" y="48">
-                                                <bitmap>media/images/box/root.png</bitmap>
-                                                <script language="4">
-                                                    <content>
-                                                        <![CDATA[import time
+		self.onStopped(self.sentences[sDefaultLang])]]></content></script><pluginContent><arabic><![CDATA[^start(animations/Stand/Gestures/Hey_1) مرحبا ^wait(animations/Stand/Gestures/Hey_1)]]></arabic><czech><![CDATA[^start(animations/Stand/Gestures/Hey_1) Ahoj ^wait(animations/Stand/Gestures/Hey_1)]]></czech><danish><![CDATA[^start(animations/Stand/Gestures/Hey_1) Hej ^wait(animations/Stand/Gestures/Hey_1)]]></danish><german><![CDATA[^start(animations/Stand/Gestures/Hey_1) Hallo ^wait(animations/Stand/Gestures/Hey_1)]]></german><greek><![CDATA[]]></greek><english><![CDATA[First, please help me loading the right map. You can add remarkable places to it.]]></english><spanish><![CDATA[^start(animations/Stand/Gestures/Hey_1) Hola ^wait(animations/Stand/Gestures/Hey_1)]]></spanish><finnish><![CDATA[^start(animations/Stand/Gestures/Hey_1) Hei ^wait(animations/Stand/Gestures/Hey_1)]]></finnish><french><![CDATA[^start(animations/Stand/Gestures/Hey_1) Bonjour ^wait(animations/Stand/Gestures/Hey_1)]]></french><italian><![CDATA[^start(animations/Stand/Gestures/Hey_1) Ciao ^wait(animations/Stand/Gestures/Hey_1)]]></italian><japanese><![CDATA[^start(animations/Stand/Gestures/Hey_1) こんにちは ^wait(animations/Stand/Gestures/Hey_1)]]></japanese><korean><![CDATA[^start(animations/Stand/Gestures/Hey_1) 안녕하세요 ^wait(animations/Stand/Gestures/Hey_1)]]></korean><dutch><![CDATA[^start(animations/Stand/Gestures/Hey_1) Hallo ^wait(animations/Stand/Gestures/Hey_1)]]></dutch><norwegian><![CDATA[]]></norwegian><polish><![CDATA[^start(animations/Stand/Gestures/Hey_1) Cześć ^wait(animations/Stand/Gestures/Hey_1)]]></polish><brazilian><![CDATA[^start(animations/Stand/Gestures/Hey_1) Olá ^wait(animations/Stand/Gestures/Hey_1)]]></brazilian><portuguese><![CDATA[^start(animations/Stand/Gestures/Hey_1) Olá ^wait(animations/Stand/Gestures/Hey_1)]]></portuguese><russian><![CDATA[^start(animations/Stand/Gestures/Hey_1) Привет ^wait(animations/Stand/Gestures/Hey_1)]]></russian><swedish><![CDATA[^start(animations/Stand/Gestures/Hey_1) Hallå ^wait(animations/Stand/Gestures/Hey_1)]]></swedish><turkish><![CDATA[^start(animations/Stand/Gestures/Hey_1) Merhaba ^wait(animations/Stand/Gestures/Hey_1)]]></turkish><chinese><![CDATA[^start(animations/Stand/Gestures/Hey_1) 你好 ^wait(animations/Stand/Gestures/Hey_1)]]></chinese><mandarintaiwan><![CDATA[]]></mandarintaiwan><language>5</language></pluginContent><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Data is sent on the output when this input is stimulated." id="2" /><Output name="onStopped" type="3" type_size="1" nature="1" inner="0" tooltip="Data sent when asked." id="3" /></Box><Link inputowner="0" indexofinput="4" outputowner="2" indexofoutput="4" /><Link inputowner="5" indexofinput="2" outputowner="0" indexofoutput="2" /><Link inputowner="2" indexofinput="2" outputowner="5" indexofoutput="3" /></Diagram></BehaviorKeyframe></BehaviorLayer></Timeline><Resource name="Speech" type="Lock" timeout="0" /></Box><Link inputowner="4" indexofinput="2" outputowner="5" indexofoutput="3" /><Link inputowner="0" indexofinput="3" outputowner="4" indexofoutput="5" /><Link inputowner="0" indexofinput="4" outputowner="4" indexofoutput="4" /><Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" /><Link inputowner="5" indexofinput="2" outputowner="1" indexofoutput="4" /></Diagram></BehaviorKeyframe></BehaviorLayer></Timeline></Box><Box name="Show Patrol Panel" id="4" localization="8" tooltip="Enter description here" x="598" y="50"><bitmap>media/images/box/box-diagram.png</bitmap><script language="4"><content><![CDATA[]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="Patrol panel_onAddWayPoint" type="0" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="2" /><Input name="Patrol panel_onStartPatrol" type="1" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="3" /><Input name="Patrol panel_onReset" type="1" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="4" /><Input name="Patrol panel_onRelocalize" type="0" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="5" /><Input name="Patrol panel_onStop" type="1" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="6" /><Input name="Show App_onStart" type="1" type_size="1" nature="2" inner="0" tooltip="This input has been automatically generated&#x0A;by converting several boxes into a single box." id="7" /><Input name="onStopPatrol" type="1" type_size="1" nature="2" inner="0" tooltip="" id="8" /><Input name="onInfinitePatrol" type="0" type_size="1" nature="2" inner="0" tooltip="" id="9" /><Input name="isReportChanged" type="0" type_size="1" nature="2" inner="0" tooltip="" id="10" /><Output name="Patrolpanel_onStopped" type="1" type_size="1" nature="2" inner="0" tooltip="This output has been automatically generated&#x0A;by converting several boxes into a single box." id="11" /><Timeline enable="0"><BehaviorLayer name="behavior_layer1"><BehaviorKeyframe name="keyframe1" index="1"><Diagram><Box name="Show App" id="2" localization="8" tooltip="Loads the application on the tablet, if it exists, and displays the webview.&#x0A;&#x0A;V1.0.0&#x0A;" x="342" y="48"><bitmap>media/images/box/root.png</bitmap><script language="4"><content><![CDATA[import time
 
 class MyClass(GeneratedClass):
 
@@ -433,25 +190,20 @@ class MyClass(GeneratedClass):
         if state:
             self.onSuccess()
         else:
-            self.onFailure()]]>
-</content>
-                                                </script>
-                                                <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-                                                <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
-                                                <Output name="onSuccess" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished successfully." id="3" />
-                                                <Output name="onFailure" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished unsuccessfully." id="4" />
-                                            </Box>
-                                            <Box name="Patrol panel" id="3" localization="8" tooltip="" x="617" y="357">
-                                                <bitmap>media/images/box/box-python-script.png</bitmap>
-                                                <script language="4">
-                                                    <content>
-                                                        <![CDATA[import time
+            self.onFailure()]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Output name="onSuccess" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished successfully." id="3" /><Output name="onFailure" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished unsuccessfully." id="4" /></Box><Box name="Patrol panel" id="3" localization="8" tooltip="" x="617" y="357"><bitmap>media/images/box/box-python-script.png</bitmap><script language="4"><content><![CDATA[import time
 import almath as m
 import qi
+import numpy
+import vision_definitions
+import sys
+import cv2
+import base64
+import math
 
 try:
     from almath import OccupancyMapParams
     from almath import Point2Di
+
 except:
     class Point2Di:
         def __init__(self, x, y):
@@ -473,6 +225,20 @@ except:
         def getPixelFromPosition(self, position):
             return m.Position2D((position.x - self.originOffset.x) / self.metersPerPixel, (self.originOffset.y - position.y) / self.metersPerPixel)
 
+
+def to_numpy_array(val): #convert into a numpy array (usefull for pictures)
+    width = val[0] #size
+    height = val[1]
+    data = val[6]
+    colorspace = val[3]
+    if colorspace == vision_definitions.kRGBColorSpace:
+        array = numpy.frombuffer(data, dtype=numpy.dtype("B")).reshape(height, width, 3)
+    elif colorspace == vision_definitions.kYuvColorSpace:
+        array = numpy.frombuffer(data, dtype=numpy.dtype("B")).reshape(height, width)
+    else:
+        raise Exception("Unsupported colorspace %d" % colorspace)
+    return array
+
 class MyClass(GeneratedClass):
     def __init__(self):
         GeneratedClass.__init__(self)
@@ -482,19 +248,17 @@ class MyClass(GeneratedClass):
         self.nav = self.session.service("ALNavigation")
         self.tts = self.session.service("ALAnimatedSpeech")
         self.dialog = self.session.service("ALDialog")
+        self.picture = self.session.service("ALVideoDevice") #to take pictures
         self.useErrorCodes = False
+        self.move = self.session.service("ALMotion")
         version_array = self.session.service("ALSystem").systemVersion().split('.')
         if len(version_array) == 3:
             version_tuple = (int(version_array[0]), int(version_array[1]), int(version_array[2]))
             self.useErrorCodes = version_tuple >= (2, 7, 0)
         self.stopPatrol = False
         self.infinitePatrol = False
-        try:
-            self.exploManager = self.session.service("ExplorationManager")
-        except:
-            self.tts.say("Please install application Places to run Patrol")
-            self.onInput_onStop()
-            return
+        self.isPatrolReport = False
+
         self.events = {"metricalMap": "Patrol/MetricalMap",
                        "exploList": "Patrol/AvailableExplo",
                        "waypoints": "Patrol/Waypoints",
@@ -506,9 +270,34 @@ class MyClass(GeneratedClass):
                        "stoppatrol": "Patrol/StopPatrol",
                        "patrolStarted": "Patrol/PatrolStarted",
                        "patrolFinished": "Patrol/PatrolFinished",
-                       "infinitePatrol": "Patrol/OnInfinitePatrolChanged"}
+                       "infinitePatrol": "Patrol/OnInfinitePatrolChanged",
+                       "picture": "Patrol/DisplayPicture",
+                       "start_report": "Patrol/StartReport",
+                       "end_report": "Patrol/EndReport",
+                       "disp_map": "Patrol/DisplayMap",
+                       "is_report": "Patrol/IsReport",
+                       "patrol_step": "Patrol/Step2"}
+
         self.waypoints = []
         self.waypointsPx = []
+
+        # Parameters
+        # Available cameras: top (kTopCamera), bottom (kBottomCamera)
+        self.CAMERA_ID = vision_definitions.kTopCamera
+        # Available resolutions: kQQVGA (160x120), kQVGA (320x240), kVGA (640x480), k4VGA (1280x960)
+        self.RESOLUTION = vision_definitions.kVGA
+        # color : kRGBColorSpace, grayscale : kYuvColorSpace
+        self.COLORSPACE = vision_definitions.kRGBColorSpace
+
+        # Subscribe to ALVideoDevice
+        self.handle = self.picture.subscribeCamera("pygetimage", self.CAMERA_ID, self.RESOLUTION, self.COLORSPACE, 5)
+
+        try:
+            self.exploManager = self.session.service("ExplorationManager")
+        except:
+            self.tts.say("Please install application Places to run Patrol")
+            self.onInput_onStop()
+            return
 
     def declareEvents(self):
         for k in self.events:
@@ -549,7 +338,7 @@ class MyClass(GeneratedClass):
         occMap = self.exploManager.getOccupancyMapParams()
         self.occMap = OccupancyMapParams(occMap[0], occMap[1], m.Position2D())
         self.occMap.originOffset = m.Position2D(occMap[2][0], occMap[2][1])
-        if self.exploManager.isLocalized():
+        if self.exploManager.isLocalized(): #if already localized
             self.onLocalized()
         else:
             self.tts.say("Please help me localizing by clicking the map where you think I am")
@@ -576,6 +365,7 @@ class MyClass(GeneratedClass):
             self.nav.startLocalization()
             self.updateRobotPosition()
             self.tts.say("Click the button to configure Patrol. You can also use vocal targets")
+            self.mem.raiseEvent("Patrol/Step2", []) #step = 2 -> patrol
             self.startDialog()
         except Exception as e:
             self.logger.info(str(e))
@@ -591,26 +381,62 @@ class MyClass(GeneratedClass):
         self.logger.info("add waypoint")
         self.waypoints.append([[metrical_target.x, metrical_target.y], label])
         self.waypointsPx.append(target)
-        self.mem.raiseEvent(self.events["waypoints"], self.waypointsPx)
+        self.mem.raiseEvent(self.events["waypoints"], [0, self.waypointsPx])
+
+
+    def display_pic(self, numpy_array, ind): #show the map and waypoint, wait, show the picture
+        self.logger.info("Start display_pic function")
+        tabletSize = 736
+        pic = cv2.resize(numpy_array, (tabletSize, tabletSize)) #reshape the image for the tablet
+        cv_img = pic.astype(numpy.uint8)
+        color_img = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
+        mpp = 0
+        size = tabletSize
+        flag, buff = cv2.imencode(".png", color_img) #png file
+        buff64 = base64.b64encode(buff) #base 64
+        full = "data:image/png;base64," + buff64
+        self.logger.info("going to show the waypoint")
+        self.mem.raiseEvent("Patrol/Waypoints", [1, [self.waypointsPx[ind]]]) #display the map with the particular waypoint
+        self.mem.raiseEvent("Patrol/DisplayMap", [])
+        time.sleep(2)
+        self.logger.info("going to publish a picture")
+        self.mem.raiseEvent(self.events["picture"], [size, full])
+        self.logger.info("A picture has been published")
+        time.sleep(6)
+
 
     def onInput_onStartPatrol(self):
         self.stopPatrol = False
-        self.mem.raiseEvent(self.events["patrolStarted"], [])
-        self.onStopDialog()
-        time.sleep(1)
-        self.tts.say("Let's patrol")
-        target = self.waypoints
-        max_attempts = 5
+        max_attempts = 5 #nb of attempts per point
         loop = True
         while loop:
-            for waypoint in self.waypoints:
+            images = [] #empty the list of images
+            copy_way = []
+            copy_way = self.waypoints[:] #copy the waypoints
+            self.mem.raiseEvent(self.events["patrolStarted"], []) #start patrol
+            self.onStopDialog()
+            time.sleep(1)
+            robot_pose_i = m.Pose2D(self.nav.getRobotPositionInMap()[0]) #get the initial position
+            theta_i = robot_pose_i.theta
+            position = m.Position2D(robot_pose_i.x, robot_pose_i.y)
+            pxl = self.occMap.getPixelFromPosition(position)
+
+            #add the initial position as a waypoint
+            label = "end_point"
+            label = label.lower()
+            metrical_target = self.occMap.getPositionFromPixel(Point2Di(pxl.x, pxl.y))
+            self.logger.info("add waypoint")
+            copy_way.append([[metrical_target.x, metrical_target.y], label])
+            self.tts.say("Let's patrol")
+            target = copy_way
+            for waypoint in copy_way: #for each waypoint
                 attempt = 1
                 while (attempt <= max_attempts):
                     if self.stopPatrol:
                         break
                     target = waypoint[0]
                     label = waypoint[1]
-                    fut = self.nav.navigateToInMap([target[0], target[1], 0.0],     _async=True)
+                    fut = self.nav.navigateToInMap([target[0], target[1], 0.0],     _async=True) #get the final state to reach
                     while (fut.isRunning()):
                         self.updateRobotPosition()
                         time.sleep(0.2)
@@ -630,16 +456,63 @@ class MyClass(GeneratedClass):
                     self.tts.say("I cannot reach this point, let's skip it")
                 else:
                     self.tts.say("I have reached " + str(label))
+                    self.logger.info("isPatrolReport Value = " + str(self.isPatrolReport))
+                    if ((self.isPatrolReport) and (label!= "end_point")): #if it is not the last waypoint
+                        self.logger.info("** || Going to take a picture || **")
+                        try:
+                            value = self.picture.getImageRemote(self.handle) # Get image from the camera
+                            if value is None:
+                                raise Exception("Error in getImageRemote")
+                            size = value[0] #get the size of the image
+                            pic = to_numpy_array(value) # Convert the result into a numpy array
+                            images.append(pic) #add the image to the list
+                        except Exception as e:
+                            raise e
                 time.sleep(0.5)
-            loop = not(self.stopPatrol) and self.infinitePatrol
-        self.mem.raiseEvent(self.events["patrolFinished"], [])
-        self.tts.say("My patrol is done")
-        self.startDialog()
+
+            #go to the initial orientation
+            robot_pose_f = m.Pose2D(self.nav.getRobotPositionInMap()[0]) #get the final position
+            theta_f = robot_pose_f.theta
+            #rotate from theta
+            theta = float(theta_i - theta_f)
+            #get theta in [-pi;pi]
+            while (theta >= math.pi):
+                theta = theta - math.pi
+            while (theta <= -math.pi):
+                theta = theta + math.pi
+            self.move.moveTo(0.0, 0.0, theta)
+            self.tts.say("My patrol is done")
+            self.mem.raiseEvent(self.events["patrolFinished"], [])
+
+            if not (self.stopPatrol) and self.isPatrolReport:
+                self.tts.say("Come to see the patrol report")
+                i = 0
+                length = len(images)
+                self.logger.info("nb of images is : " + str(length))
+                self.mem.raiseEvent(self.events["start_report"], [])
+                #display pictures on the touchscreen
+                for i in range(0, length):
+                    pic = images[i] #get one image
+                    self.display_pic(pic, i) #display the map then a picture
+
+            self.mem.raiseEvent(self.events["end_report"], [])
+            self.mem.raiseEvent(self.events["waypoints"], [0, self.waypointsPx]) #display the position of waypoints
+            self.logger.info("Going to republish map")
+            self.mem.raiseEvent("Patrol/DisplayMap", []) #display the map
+            self.logger.info("Map has been published")
+            self.startDialog()
+
+            self.logger.info("stop Patrol : " + str(self.stopPatrol))
+            self.logger.info("infinite Patrol : " + str(self.infinitePatrol))
+            if (self.stopPatrol == 0) and (self.infinitePatrol == 1):
+                loop = True
+            else :
+                loop = False
 
     def onInput_onReset(self):
         self.waypoints = []
         self.waypointsPx = []
-        self.mem.raiseEvent(self.events["waypoints"], self.waypointsPx)
+        self.mem.raiseEvent(self.events["waypoints"], [ 0, self.waypointsPx] )
 
     def onInput_onWordRecognized(self, word):
         label = word.lower()
@@ -658,78 +531,18 @@ class MyClass(GeneratedClass):
         self.stopPatrol = True
         self.nav.stopNavigateTo()
 
+    def onInput_isReportChanged(self, patrol_report):
+        self.logger.info("set patrol report: " + str(patrol_report))
+        self.isPatrolReport = patrol_report
+
     def onInput_onInfinitePatrolChanged(self, infinite_patrol):
         self.logger.info("set infinite patrol: " + str(infinite_patrol))
         self.infinitePatrol = infinite_patrol
 
+    def __del__(self):
+        self.logger.info("- - - going to unsubscribe to the video device - - -")
+        self.picture.unsubscribe(self.handle)
+
     def onInput_onStop(self):
         self.onUnload() #it is recommended to reuse the clean-up as the box is stopped
-        self.onStopped() #activate the output of the box]]>
-</content>
-                                                </script>
-                                                <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-                                                <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
-                                                <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-                                                <Input name="onAddWayPoint" type="0" type_size="1" nature="1" inner="0" tooltip="" id="4" />
-                                                <Input name="onStartPatrol" type="1" type_size="1" nature="1" inner="0" tooltip="" id="5" />
-                                                <Input name="onReset" type="1" type_size="1" nature="1" inner="0" tooltip="" id="6" />
-                                                <Input name="onRelocalize" type="0" type_size="1" nature="1" inner="0" tooltip="" id="7" />
-                                                <Input name="onWordRecognized" type="3" type_size="1" nature="1" inner="0" tooltip="" id="8" />
-                                                <Input name="onStopPatrol" type="1" type_size="1" nature="1" inner="0" tooltip="" id="9" />
-                                                <Input name="onInfinitePatrolChanged" type="0" type_size="1" nature="1" inner="0" tooltip="" id="10" />
-                                                <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="11" />
-                                                <Output name="onStartDialog" type="1" type_size="1" nature="2" inner="0" tooltip="" id="12" />
-                                                <Output name="onStopDialog" type="1" type_size="1" nature="2" inner="0" tooltip="" id="13" />
-                                            </Box>
-                                            <Box name="patrol" id="1" localization="8" tooltip="" x="824" y="579">
-                                                <dialogFile>../patrol/patrol.dlg</dialogFile>
-                                                <bitmap>media/images/box/box-dialog.png</bitmap>
-                                                <script language="4">
-                                                    <content>
-                                                        <![CDATA[]]>
-</content>
-                                                </script>
-                                                <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
-                                                <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
-                                                <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
-                                                <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
-                                                <Output name="recognized" type="3" type_size="1" nature="2" inner="0" tooltip="" id="5" />
-                                            </Box>
-                                            <Link inputowner="3" indexofinput="2" outputowner="2" indexofoutput="3" />
-                                            <Link inputowner="3" indexofinput="3" outputowner="2" indexofoutput="4" />
-                                            <Link inputowner="3" indexofinput="4" outputowner="0" indexofoutput="2" />
-                                            <Link inputowner="3" indexofinput="5" outputowner="0" indexofoutput="3" />
-                                            <Link inputowner="3" indexofinput="6" outputowner="0" indexofoutput="4" />
-                                            <Link inputowner="3" indexofinput="7" outputowner="0" indexofoutput="5" />
-                                            <Link inputowner="3" indexofinput="3" outputowner="0" indexofoutput="6" />
-                                            <Link inputowner="2" indexofinput="2" outputowner="0" indexofoutput="7" />
-                                            <Link inputowner="0" indexofinput="10" outputowner="3" indexofoutput="11" />
-                                            <Link inputowner="1" indexofinput="2" outputowner="3" indexofoutput="12" />
-                                            <Link inputowner="1" indexofinput="3" outputowner="3" indexofoutput="13" />
-                                            <Link inputowner="3" indexofinput="8" outputowner="1" indexofoutput="5" />
-                                            <Link inputowner="3" indexofinput="9" outputowner="0" indexofoutput="8" />
-                                            <Link inputowner="3" indexofinput="10" outputowner="0" indexofoutput="9" />
-                                        </Diagram>
-                                    </BehaviorKeyframe>
-                                </BehaviorLayer>
-                            </Timeline>
-                        </Box>
-                        <Link inputowner="4" indexofinput="2" outputowner="0" indexofoutput="4" />
-                        <Link inputowner="4" indexofinput="3" outputowner="0" indexofoutput="5" />
-                        <Link inputowner="4" indexofinput="4" outputowner="0" indexofoutput="6" />
-                        <Link inputowner="4" indexofinput="5" outputowner="0" indexofoutput="7" />
-                        <Link inputowner="0" indexofinput="11" outputowner="4" indexofoutput="10" />
-                        <Link inputowner="4" indexofinput="6" outputowner="0" indexofoutput="8" />
-                        <Link inputowner="4" indexofinput="7" outputowner="1" indexofoutput="5" />
-                        <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
-                        <Link inputowner="0" indexofinput="11" outputowner="6" indexofoutput="3" />
-                        <Link inputowner="6" indexofinput="2" outputowner="1" indexofoutput="6" />
-                        <Link inputowner="1" indexofinput="2" outputowner="6" indexofoutput="4" />
-                        <Link inputowner="4" indexofinput="8" outputowner="0" indexofoutput="9" />
-                        <Link inputowner="4" indexofinput="9" outputowner="0" indexofoutput="10" />
-                    </Diagram>
-                </BehaviorKeyframe>
-            </BehaviorLayer>
-        </Timeline>
-    </Box>
-</ChoregrapheProject>
+        self.onStopped() #activate the output of the box]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Input name="onAddWayPoint" type="0" type_size="1" nature="1" inner="0" tooltip="" id="4" /><Input name="onStartPatrol" type="1" type_size="1" nature="1" inner="0" tooltip="" id="5" /><Input name="onReset" type="1" type_size="1" nature="1" inner="0" tooltip="" id="6" /><Input name="onRelocalize" type="0" type_size="1" nature="1" inner="0" tooltip="" id="7" /><Input name="onWordRecognized" type="3" type_size="1" nature="1" inner="0" tooltip="" id="8" /><Input name="onStopPatrol" type="1" type_size="1" nature="1" inner="0" tooltip="" id="9" /><Input name="onInfinitePatrolChanged" type="0" type_size="1" nature="1" inner="0" tooltip="" id="10" /><Input name="isReportChanged" type="0" type_size="1" nature="1" inner="0" tooltip="" id="11" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="12" /><Output name="onStartDialog" type="1" type_size="1" nature="2" inner="0" tooltip="" id="13" /><Output name="onStopDialog" type="1" type_size="1" nature="2" inner="0" tooltip="" id="14" /></Box><Box name="patrol" id="1" localization="8" tooltip="" x="824" y="579"><dialogFile>../patrol/patrol.dlg</dialogFile><bitmap>media/images/box/box-dialog.png</bitmap><script language="4"><content><![CDATA[]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" /><Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" /><Output name="recognized" type="3" type_size="1" nature="2" inner="0" tooltip="" id="5" /></Box><Link inputowner="3" indexofinput="2" outputowner="2" indexofoutput="3" /><Link inputowner="3" indexofinput="3" outputowner="2" indexofoutput="4" /><Link inputowner="3" indexofinput="4" outputowner="0" indexofoutput="2" /><Link inputowner="3" indexofinput="5" outputowner="0" indexofoutput="3" /><Link inputowner="3" indexofinput="6" outputowner="0" indexofoutput="4" /><Link inputowner="3" indexofinput="7" outputowner="0" indexofoutput="5" /><Link inputowner="3" indexofinput="3" outputowner="0" indexofoutput="6" /><Link inputowner="2" indexofinput="2" outputowner="0" indexofoutput="7" /><Link inputowner="0" indexofinput="11" outputowner="3" indexofoutput="12" /><Link inputowner="1" indexofinput="2" outputowner="3" indexofoutput="13" /><Link inputowner="1" indexofinput="3" outputowner="3" indexofoutput="14" /><Link inputowner="3" indexofinput="8" outputowner="1" indexofoutput="5" /><Link inputowner="3" indexofinput="9" outputowner="0" indexofoutput="8" /><Link inputowner="3" indexofinput="10" outputowner="0" indexofoutput="9" /><Link inputowner="3" indexofinput="11" outputowner="0" indexofoutput="10" /></Diagram></BehaviorKeyframe></BehaviorLayer></Timeline></Box><Link inputowner="4" indexofinput="2" outputowner="0" indexofoutput="4" /><Link inputowner="4" indexofinput="3" outputowner="0" indexofoutput="5" /><Link inputowner="4" indexofinput="4" outputowner="0" indexofoutput="6" /><Link inputowner="4" indexofinput="5" outputowner="0" indexofoutput="7" /><Link inputowner="0" indexofinput="12" outputowner="4" indexofoutput="11" /><Link inputowner="4" indexofinput="6" outputowner="0" indexofoutput="8" /><Link inputowner="4" indexofinput="7" outputowner="1" indexofoutput="5" /><Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" /><Link inputowner="0" indexofinput="12" outputowner="6" indexofoutput="3" /><Link inputowner="6" indexofinput="2" outputowner="1" indexofoutput="6" /><Link inputowner="1" indexofinput="2" outputowner="6" indexofoutput="4" /><Link inputowner="4" indexofinput="8" outputowner="0" indexofoutput="9" /><Link inputowner="4" indexofinput="9" outputowner="0" indexofoutput="10" /><Link inputowner="4" indexofinput="10" outputowner="0" indexofoutput="11" /></Diagram></BehaviorKeyframe></BehaviorLayer></Timeline></Box></ChoregrapheProject>
