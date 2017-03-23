@@ -341,7 +341,14 @@ class MyClass(GeneratedClass):
         if self.exploManager.isLocalized(): #if already localized
             self.onLocalized()
         else:
-            self.tts.say("Please help me localizing by clicking the map where you think I am")
+            try : #try to localize with pictures
+                self.tts.say("Let me see if I can recognize this place")
+                self.nav.relocalizeInMap() #try to localize with pictures
+                self.onLocalized()
+            except :
+                #if it is not, call onInput_onRelocalize
+                self.logger.info("Relocalize In Map failed . . .")
+                self.tts.say("Please help me localizing by clicking the map where you think I am")
 
     def onInput_onRelocalize(self, target):
         self.tts.say("Please take a step back so that I can take a look")
@@ -351,14 +358,11 @@ class MyClass(GeneratedClass):
         self.logger.info("px: " + str(px))
         self.logger.info("relocalize at: " + str(metrical_target))
         try:
-            self.nav.relocalizeInMap([metrical_target.x, metrical_target.y, 0.0])
+            self.nav.relocalizeInMapWithHint(metrical_target.x, metrical_target.y, 0.0)
             self.onLocalized()
+
         except Exception as e:
-            try:
-                self.nav.relocalizeInMap()
-                self.onLocalized()
-            except Exception as e:
-                self.logger.info(str(e))
+            print("unable to relocalizeInMapWithHint " + str(e))
 
     def onLocalized(self):
         try:
@@ -436,17 +440,14 @@ class MyClass(GeneratedClass):
                         break
                     target = waypoint[0]
                     label = waypoint[1]
-                    fut = self.nav.navigateToInMap([target[0], target[1], 0.0],     _async=True) #get the final state to reach
+                    fut = self.nav.navigateToInMap(target[0], target[1], _async=True) #get the final state to reach
                     while (fut.isRunning()):
                         self.updateRobotPosition()
                         time.sleep(0.2)
                     returnValue = fut.value()
-                    if self.useErrorCodes and returnValue == 4 or not(self.useErrorCodes) and returnValue == 0:
-                        self.tts.say("oops, there is an obstacle")
+                    if self.useErrorCodes and returnValue == False:
+                        self.tts.say("Cannot navigate, will retry ...")
                         attempt += 1
-                    elif self.useErrorCodes and fut.value() == 6:
-                        self.tts.say("This target is too far for me, I will skip it")
-                        break
                     else:
                         break
                 if self.stopPatrol:

@@ -47,7 +47,7 @@ class MyClass(GeneratedClass):
         self.ba.setEnabled(False)
         self.nav.explore(10)
         self.nav.startLocalization()
-        self.nav.navigateToInMap([0, 0, 0])
+        self.nav.navigateToInMap(0, 0)
         self.nav.stopLocalization()
         self.nav.saveExploration()
         self.tts.say("I finished and saved this exploration.")
