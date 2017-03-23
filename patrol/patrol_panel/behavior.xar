@@ -8,7 +8,6 @@
         self.life.setSafeguardEnabled("RobotMoved", False)
         self.life.setSafeguardEnabled("RobotPushed", False)
         self.ba = self.session().service("ALBasicAwareness")
-        self.ba.stopAwareness()
         pass
 
     def onUnload(self):
@@ -16,6 +15,7 @@
         pass
 
     def onInput_onStart(self):
+        self.ba.stopAwareness()
         if self.exploManager.isExplorationLoaded():
             self.onExploLoaded()
         else:
