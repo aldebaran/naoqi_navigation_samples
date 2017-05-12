@@ -199,6 +199,7 @@ import sys
 import cv2
 import base64
 import math
+geometry = qi.module("geometry_module")
 
 try:
     from almath import OccupancyMapParams
@@ -246,6 +247,9 @@ class MyClass(GeneratedClass):
         self.session.connect("tcp://127.0.0.1:9559")
         self.mem = self.session.service("ALMemory")
         self.nav = self.session.service("ALNavigation")
+        self.mapping = self.session.service("Mapping")
+        self.mapFrame = self.mapping.mapFrame()
+        self.actuation = self.session.service("ActuationPrivate")
         self.tts = self.session.service("ALAnimatedSpeech")
         self.dialog = self.session.service("ALDialog")
         self.picture = self.session.service("ALVideoDevice") #to take pictures
@@ -383,7 +387,11 @@ class MyClass(GeneratedClass):
         label = label.lower()
         metrical_target = self.occMap.getPositionFromPixel(Point2Di(target[0], target[1]))
         self.logger.info("add waypoint")
-        self.waypoints.append([[metrical_target.x, metrical_target.y], label])
+        target_tf = geometry.makeTransform(
+                      geometry.makeQuaternion(0.0, 0.0, 0.0, 1.0),
+                      geometry.makeVector3(metrical_target.x, metrical_target.y, 0.0))
+        target_frame = self.mapFrame.makeAttachedFrame(target_tf)
+        self.waypoints.append([target_frame.frame(), label])
         self.waypointsPx.append(target)
         self.mem.raiseEvent(self.events["waypoints"], [0, self.waypointsPx])
 
@@ -430,25 +438,33 @@ class MyClass(GeneratedClass):
             label = label.lower()
             metrical_target = self.occMap.getPositionFromPixel(Point2Di(pxl.x, pxl.y))
             self.logger.info("add waypoint")
-            copy_way.append([[metrical_target.x, metrical_target.y], label])
+            target_tf = geometry.makeTransform(
+                      geometry.makeQuaternion(0.0, 0.0, 0.0, 1.0),
+                      geometry.makeVector3(metrical_target.x, metrical_target.y, 0.0))
+            target_frame = self.mapFrame.makeAttachedFrame(target_tf)
+            copy_way.append([target_frame.frame(), label])
             self.tts.say("Let's patrol")
-            target = copy_way
             for waypoint in copy_way: #for each waypoint
                 attempt = 1
                 while (attempt <= max_attempts):
                     if self.stopPatrol:
                         break
-                    target = waypoint[0]
+                    frame = waypoint[0]
                     label = waypoint[1]
-                    fut = self.nav.navigateToInMap(target[0], target[1], _async=True) #get the final state to reach
-                    while (fut.isRunning()):
-                        self.updateRobotPosition()
-                        time.sleep(0.2)
-                    returnValue = fut.value()
-                    if self.useErrorCodes and returnValue == False:
-                        self.tts.say("Cannot navigate, will retry ...")
-                        attempt += 1
-                    else:
+                    goto = self.actuation.makeGlobalGoTo(frame)
+                    try:
+                      self.gotoFuture = goto.run(_async=True)
+                      while (self.gotoFuture.isRunning()):
+                          self.updateRobotPosition()
+                          time.sleep(0.2)
+                      returnValue = self.gotoFuture.value()
+                      if not(returnValue):
+                          self.tts.say("oops, there is an obstacle")
+                          attempt += 1
+                      else:
+                          break
+                    except:
+                        self.tts.say("This target is too far for me, I will skip it")
                         break
                 if self.stopPatrol:
                     self.tts.say("I will stop here")
@@ -530,7 +546,8 @@ class MyClass(GeneratedClass):
 
     def onInput_onStopPatrol(self):
         self.stopPatrol = True
-        self.nav.stopNavigateTo()
+        if self.gotoFuture and self.gotoFuture.isRunning():
+            self.gotoFuture.cancel()
 
     def onInput_isReportChanged(self, patrol_report):
         self.logger.info("set patrol report: " + str(patrol_report))
