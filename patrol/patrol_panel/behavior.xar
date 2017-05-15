@@ -482,11 +482,6 @@ class MyClass(GeneratedClass):
         self.nav = self.session.service("ALNavigation")
         self.tts = self.session.service("ALAnimatedSpeech")
         self.dialog = self.session.service("ALDialog")
-        self.useErrorCodes = False
-        version_array = self.session.service("ALSystem").systemVersion().split('.')
-        if len(version_array) == 3:
-            version_tuple = (int(version_array[0]), int(version_array[1]), int(version_array[2]))
-            self.useErrorCodes = version_tuple >= (2, 7, 0)
         self.stopPatrol = False
         self.infinitePatrol = False
         try:
@@ -565,11 +560,7 @@ class MyClass(GeneratedClass):
             self.nav.relocalizeInMap([metrical_target.x, metrical_target.y, 0.0])
             self.onLocalized()
         except Exception as e:
-            try:
-                self.nav.relocalizeInMap()
-                self.onLocalized()
-            except Exception as e:
-                self.logger.info(str(e))
+            self.logger.info(str(e))
 
     def onLocalized(self):
         try:
@@ -615,10 +606,10 @@ class MyClass(GeneratedClass):
                         self.updateRobotPosition()
                         time.sleep(0.2)
                     returnValue = fut.value()
-                    if self.useErrorCodes and returnValue == 4 or not(self.useErrorCodes) and returnValue == 0:
+                    if returnValue == 4:
                         self.tts.say("oops, there is an obstacle")
                         attempt += 1
-                    elif self.useErrorCodes and fut.value() == 6:
+                    elif returnValue == 6:
                         self.tts.say("This target is too far for me, I will skip it")
                         break
                     else:

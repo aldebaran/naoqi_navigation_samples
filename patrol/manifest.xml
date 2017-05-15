@@ -49,7 +49,7 @@
   </dialogContent>
  </contents>
  <requirements>
-  <naoqiRequirement minVersion="2.5.2"/>
+  <naoqiRequirement maxVersion="2.5" minVersion="2.5.2"/>
   <robotRequirement model="JULIETTE_Y20"/>
  </requirements>
 </package>
