@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package uuid="patrol-c8782b" version="0.0.6">
+<package version="1.0.0" uuid="patrol-c8782b">
  <names>
   <name lang="en_US">patrol</name>
   <name lang="en_US-x-scrald">patrol</name>
@@ -49,7 +49,7 @@
   </dialogContent>
  </contents>
  <requirements>
-  <naoqiRequirement minVersion="2.5.2"/>
+  <naoqiRequirement minVersion="2.7"/>
   <robotRequirement model="JULIETTE_Y20"/>
  </requirements>
 </package>
