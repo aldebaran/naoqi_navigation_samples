@@ -190,7 +190,20 @@ class MyClass(GeneratedClass):
         if state:
             self.onSuccess()
         else:
-            self.onFailure()]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Output name="onSuccess" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished successfully." id="3" /><Output name="onFailure" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished unsuccessfully." id="4" /></Box><Box name="Patrol panel" id="3" localization="8" tooltip="" x="617" y="357"><bitmap>media/images/box/box-python-script.png</bitmap><script language="4"><content><![CDATA[import time
+            self.onFailure()]]>
+</content>
+                                                </script>
+                                                <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+                                                <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+                                                <Output name="onSuccess" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished successfully." id="3" />
+                                                <Output name="onFailure" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished unsuccessfully." id="4" />
+                                            </Box>
+                                            <Box name="Patrol panel" id="3" localization="8" tooltip="" x="614" y="368">
+                                                <bitmap>media/images/box/box-python-script.png</bitmap>
+                                                <script language="4">
+                                                    <content>
+                                                        <![CDATA[import time
+import time
 import almath as m
 import qi
 import numpy
@@ -248,6 +261,7 @@ class MyClass(GeneratedClass):
         self.mem = self.session.service("ALMemory")
         self.nav = self.session.service("ALNavigation")
         self.mapping = self.session.service("Mapping")
+        self.robotFrame = self.session.service("Actuation").robotFrame()
         self.mapFrame = self.mapping.mapFrame()
         self.actuation = self.session.service("ActuationPrivate")
         self.tts = self.session.service("ALAnimatedSpeech")
@@ -317,9 +331,19 @@ class MyClass(GeneratedClass):
         pass
 
     def updateRobotPosition(self):
-        robot_pose = m.Pose2D(self.nav.getRobotPositionInMap()[0])
-        position = m.Position2D(robot_pose.x, robot_pose.y)
-        pxl = self.occMap.getPixelFromPosition(position)
+        try:
+            robot_in_map_tf = self.robotFrame.computeTransformWithRobotDriftCompensation(self.mapFrame)["transform"]
+        except Exception as e:
+            self.logger.info("error: " + str(e))
+            return
+        quat = m.Quaternion(robot_in_map_tf["rotation"]["w"], robot_in_map_tf["rotation"]["x"],
+            robot_in_map_tf["rotation"]["y"], robot_in_map_tf["rotation"]["z"])
+        almath_tf = m.transformFromQuaternion(quat)
+        almath_tf.r1_c4 = robot_in_map_tf["translation"]["x"]
+        almath_tf.r2_c4 = robot_in_map_tf["translation"]["y"]
+        almath_tf.r3_c4 = robot_in_map_tf["translation"]["z"]
+        robot_pose = m.pose2DFromTransform(almath_tf)
+        pxl = self.occMap.getPixelFromPosition(m.Position2D(robot_pose.x, robot_pose.y))
         pxl_front = self.occMap.getPixelFromPosition(m.position2DFromPose2D(robot_pose * m.Pose2D(0.2, 0, 0)))
         radius = 0.2 / self.occMap.metersPerPixel
         self.mem.raiseEvent("Patrol/RobotPosition", [[int(pxl.x), int(pxl.y)], int(radius), [int(pxl_front.x), int(pxl_front.y)]])
@@ -371,6 +395,7 @@ class MyClass(GeneratedClass):
     def onLocalized(self):
         try:
             self.nav.startLocalization()
+            time.sleep(0.5)
             self.updateRobotPosition()
             self.tts.say("Click the button to configure Patrol. You can also use vocal targets")
             self.mem.raiseEvent("Patrol/Step2", []) #step = 2 -> patrol
@@ -463,7 +488,8 @@ class MyClass(GeneratedClass):
                           attempt += 1
                       else:
                           break
-                    except:
+                    except Exception as e:
+                        self.logger.info("error while running goto: " + str(e))
                         self.tts.say("This target is too far for me, I will skip it")
                         break
                 if self.stopPatrol:
