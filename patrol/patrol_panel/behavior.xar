@@ -190,7 +190,20 @@ class MyClass(GeneratedClass):
         if state:
             self.onSuccess()
         else:
-            self.onFailure()]]></content></script><Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" /><Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" /><Output name="onSuccess" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished successfully." id="3" /><Output name="onFailure" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished unsuccessfully." id="4" /></Box><Box name="Patrol panel" id="3" localization="8" tooltip="" x="617" y="357"><bitmap>media/images/box/box-python-script.png</bitmap><script language="4"><content><![CDATA[import time
+            self.onFailure()]]>
+</content>
+                                                </script>
+                                                <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+                                                <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+                                                <Output name="onSuccess" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished successfully." id="3" />
+                                                <Output name="onFailure" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished unsuccessfully." id="4" />
+                                            </Box>
+                                            <Box name="Patrol panel" id="3" localization="8" tooltip="" x="614" y="368">
+                                                <bitmap>media/images/box/box-python-script.png</bitmap>
+                                                <script language="4">
+                                                    <content>
+                                                        <![CDATA[import time
+import time
 import almath as m
 import qi
 import numpy
@@ -199,6 +212,7 @@ import sys
 import cv2
 import base64
 import math
+geometry = qi.module("geometry_module")
 
 try:
     from almath import OccupancyMapParams
@@ -246,6 +260,10 @@ class MyClass(GeneratedClass):
         self.session.connect("tcp://127.0.0.1:9559")
         self.mem = self.session.service("ALMemory")
         self.nav = self.session.service("ALNavigation")
+        self.mapping = self.session.service("Mapping")
+        self.robotFrame = self.session.service("Actuation").robotFrame()
+        self.mapFrame = self.mapping.mapFrame()
+        self.actuation = self.session.service("ActuationPrivate")
         self.tts = self.session.service("ALAnimatedSpeech")
         self.dialog = self.session.service("ALDialog")
         self.picture = self.session.service("ALVideoDevice") #to take pictures
@@ -313,9 +331,19 @@ class MyClass(GeneratedClass):
         pass
 
     def updateRobotPosition(self):
-        robot_pose = m.Pose2D(self.nav.getRobotPositionInMap()[0])
-        position = m.Position2D(robot_pose.x, robot_pose.y)
-        pxl = self.occMap.getPixelFromPosition(position)
+        try:
+            robot_in_map_tf = self.robotFrame.computeTransformWithRobotDriftCompensation(self.mapFrame)["transform"]
+        except Exception as e:
+            self.logger.info("error: " + str(e))
+            return
+        quat = m.Quaternion(robot_in_map_tf["rotation"]["w"], robot_in_map_tf["rotation"]["x"],
+            robot_in_map_tf["rotation"]["y"], robot_in_map_tf["rotation"]["z"])
+        almath_tf = m.transformFromQuaternion(quat)
+        almath_tf.r1_c4 = robot_in_map_tf["translation"]["x"]
+        almath_tf.r2_c4 = robot_in_map_tf["translation"]["y"]
+        almath_tf.r3_c4 = robot_in_map_tf["translation"]["z"]
+        robot_pose = m.pose2DFromTransform(almath_tf)
+        pxl = self.occMap.getPixelFromPosition(m.Position2D(robot_pose.x, robot_pose.y))
         pxl_front = self.occMap.getPixelFromPosition(m.position2DFromPose2D(robot_pose * m.Pose2D(0.2, 0, 0)))
         radius = 0.2 / self.occMap.metersPerPixel
         self.mem.raiseEvent("Patrol/RobotPosition", [[int(pxl.x), int(pxl.y)], int(radius), [int(pxl_front.x), int(pxl_front.y)]])
@@ -367,6 +395,7 @@ class MyClass(GeneratedClass):
     def onLocalized(self):
         try:
             self.nav.startLocalization()
+            time.sleep(0.5)
             self.updateRobotPosition()
             self.tts.say("Click the button to configure Patrol. You can also use vocal targets")
             self.mem.raiseEvent("Patrol/Step2", []) #step = 2 -> patrol
@@ -383,7 +412,11 @@ class MyClass(GeneratedClass):
         label = label.lower()
         metrical_target = self.occMap.getPositionFromPixel(Point2Di(target[0], target[1]))
         self.logger.info("add waypoint")
-        self.waypoints.append([[metrical_target.x, metrical_target.y], label])
+        target_tf = geometry.makeTransform(
+                      geometry.makeQuaternion(0.0, 0.0, 0.0, 1.0),
+                      geometry.makeVector3(metrical_target.x, metrical_target.y, 0.0))
+        target_frame = self.mapFrame.makeAttachedFrame(target_tf)
+        self.waypoints.append([target_frame.frame(), label])
         self.waypointsPx.append(target)
         self.mem.raiseEvent(self.events["waypoints"], [0, self.waypointsPx])
 
@@ -430,25 +463,34 @@ class MyClass(GeneratedClass):
             label = label.lower()
             metrical_target = self.occMap.getPositionFromPixel(Point2Di(pxl.x, pxl.y))
             self.logger.info("add waypoint")
-            copy_way.append([[metrical_target.x, metrical_target.y], label])
+            target_tf = geometry.makeTransform(
+                      geometry.makeQuaternion(0.0, 0.0, 0.0, 1.0),
+                      geometry.makeVector3(metrical_target.x, metrical_target.y, 0.0))
+            target_frame = self.mapFrame.makeAttachedFrame(target_tf)
+            copy_way.append([target_frame.frame(), label])
             self.tts.say("Let's patrol")
-            target = copy_way
             for waypoint in copy_way: #for each waypoint
                 attempt = 1
                 while (attempt <= max_attempts):
                     if self.stopPatrol:
                         break
-                    target = waypoint[0]
+                    frame = waypoint[0]
                     label = waypoint[1]
-                    fut = self.nav.navigateToInMap(target[0], target[1], _async=True) #get the final state to reach
-                    while (fut.isRunning()):
-                        self.updateRobotPosition()
-                        time.sleep(0.2)
-                    returnValue = fut.value()
-                    if self.useErrorCodes and returnValue == False:
-                        self.tts.say("Cannot navigate, will retry ...")
-                        attempt += 1
-                    else:
+                    goto = self.actuation.makeGlobalGoTo(frame)
+                    try:
+                      self.gotoFuture = goto.run(_async=True)
+                      while (self.gotoFuture.isRunning()):
+                          self.updateRobotPosition()
+                          time.sleep(0.2)
+                      returnValue = self.gotoFuture.value()
+                      if not(returnValue):
+                          self.tts.say("oops, there is an obstacle")
+                          attempt += 1
+                      else:
+                          break
+                    except Exception as e:
+                        self.logger.info("error while running goto: " + str(e))
+                        self.tts.say("This target is too far for me, I will skip it")
                         break
                 if self.stopPatrol:
                     self.tts.say("I will stop here")
@@ -530,7 +572,8 @@ class MyClass(GeneratedClass):
 
     def onInput_onStopPatrol(self):
         self.stopPatrol = True
-        self.nav.stopNavigateTo()
+        if self.gotoFuture and self.gotoFuture.isRunning():
+            self.gotoFuture.cancel()
 
     def onInput_isReportChanged(self, patrol_report):
         self.logger.info("set patrol report: " + str(patrol_report))
