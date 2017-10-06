@@ -11,7 +11,7 @@ if __name__ == "__main__":
         session.connect("tcp://" + ip + ":9559")
         nav = session.service("ALNavigation")
         print "IP: " + ip
-        print "navigateToInMap from " + firstID + " point to "+ secondID
+        print "NavigateToInMap from " + firstID + " point to "+ secondID
         while True:
           path = nav.getExplorationPath()
           try:
@@ -27,5 +27,5 @@ if __name__ == "__main__":
               print "Error :"
               print str(e)
     else:
-        print " navigateLoop ROBOT_IP FRIST_PATH_ID LAST_PATH_ID"
+        print "NavigateLoop ROBOT_IP FRIST_PATH_ID LAST_PATH_ID"
 
